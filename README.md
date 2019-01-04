@@ -10,12 +10,11 @@ If you want, you can generate your EC public/private key-pair here: <https://cry
 PM> Install-Package Target365.Sdk
 ```
 
-[![NuGet](https://buildstats.info/nuget/target365.sdk)](https://www.nuget.org/packages/Target365.Sdk)
-
 ### .NET CLI
 ```
 > dotnet add package Target365.Sdk
 ```
+[![NuGet](https://buildstats.info/nuget/target365.sdk)](https://www.nuget.org/packages/Target365.Sdk)
 
 ### Authors and maintainers
 Target365 (<support@target365.no>)
