@@ -1,0 +1,70 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFrameworks>net46;net461;net462;net47;net471;net472;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.23</Version>
+    <Authors>Target365</Authors>
+    <Company>Target365</Company>
+    <Product>Target365 SDK</Product>
+    <Description>.NET Library for Target365 Online Services</Description>
+    <Copyright></Copyright>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>Target365.Sdk.snk</AssemblyOriginatorKeyFile>
+    <PackageIconUrl>https://target365content.blob.core.windows.net/public/target365_nuget_logo.png</PackageIconUrl>
+    <LangVersion>latest</LangVersion>
+    <PackageProjectUrl>https://github.com/Target365/sdk-for-csharp</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Target365/sdk-for-csharp/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/Target365/sdk-for-csharp/blob/master/LICENSE</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|AnyCPU'">
+    <DocumentationFile>bin\Release\net46\Target365.Sdk.xml</DocumentationFile>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|AnyCPU'">
+    <DocumentationFile>bin\Debug\net46\Target365.Sdk.xml</DocumentationFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Target365.Sdk.csproj.vspscc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="System.Security.Cryptography.Cng" Version="4.4.0" Condition="'$(TargetFramework)' == 'netstandard1.4'" />
+    <PackageReference Include="System.Security.Cryptography.Cng" Version="4.4.0" Condition="'$(TargetFramework)' == 'netstandard1.5'" />
+    <PackageReference Include="System.Security.Cryptography.Cng" Version="4.4.0" Condition="'$(TargetFramework)' == 'netstandard1.6'" />
+    <PackageReference Include="System.Security.Cryptography.Cng" Version="4.4.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net46'" />
+    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net461'" />
+    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net462'" />
+    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net47'" />
+    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net471'" />
+    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net472'" />
+  </ItemGroup>
+
+</Project>
