@@ -16,6 +16,30 @@ PM> Install-Package Target365.Sdk
 ```
 [![NuGet](https://buildstats.info/nuget/target365.sdk)](https://www.nuget.org/packages/Target365.Sdk)
 
+### Generate EC public/private key-pair in C#
+```C#
+using System;
+using System.Security.Cryptography;
+...
+public void Generate()
+{
+    var keyParams = new CngKeyCreationParameters
+    {
+        ExportPolicy = CngExportPolicies.AllowPlaintextExport,
+        KeyUsage = CngKeyUsages.Decryption | CngKeyUsages.Signing
+    };
+
+    using (var cngKey = CngKey.Create(CngAlgorithm.ECDsaP256, null, keyParams))
+    using (var cng = new ECDsaCng(cngKey))
+    {
+        var publicBytes = cng.Key.Export(CngKeyBlobFormat.EccPublicBlob);
+        var privateBytes = cng.Key.Export(CngKeyBlobFormat.EccPrivateBlob);
+        Console.WriteLine($"Private key: {Convert.ToBase64String(privateBytes)}");
+        Console.WriteLine($"Public key: {Convert.ToBase64String(publicBytes)}");
+    }
+}
+```
+
 ### Authors and maintainers
 Target365 (<support@target365.no>)
 
