@@ -1,8 +1,5 @@
 # C# User Guide
 
-## Getting started
-To get started please see the [README.md](README.md).
-
 ## Introduction
 The Target365 SDK gives you direct access to our online services like sending and receiving SMS, address lookup and Strex payment transactions. The SDK is based on a fairly straight-forward REST API. The benefits of the SDK over the raw REST API is a higher abstraction level, strong support and an extremely high security (ECDsaP256 HMAC) that's hard to implement correctly.
 The REST API also supports weaker security by using standard API keys over HTTPS (using X-ApiKey HTTP header).
