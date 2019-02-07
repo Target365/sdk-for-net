@@ -129,9 +129,72 @@ await serviceClient.CreateStrexTransactionAsync(transaction);
 ```
 
 ### Reverse a Strex payment transaction
-This example reverses a previously billed Strex payment transaction. The original transaction will not change, but a reversal transaction will be created that counters the previous transaction by a negative Price. The reversal is an asynchronous operation that usually takes some seconds to finish.
+This example reverses a previously billed Strex payment transaction. The original transaction will not change, but a reversal transaction will be created that counters the previous transaction by a negative Price. The reversal is an asynchronous operation that usually takes a few seconds to finish.
 ```C#
 var reversedTransactionId = await serviceClient.ReverseStrexTransactionAsync(transactionId);
-Console.WriteLine($"Reversed transaction id is {reversedTransactionId}");
+Console.WriteLine($"Reversal transaction id is {reversedTransactionId}");
 ```
 
+### Address lookup for mobile number
+This example looks up address information for the mobile number 98079008. Lookup information includes registered name and address.
+```C#
+var lookup = await serviceClient.LookupAsync("+4798079008");
+Console.WriteLine("Mobile number 98079008 is registered to {lookup.LastName}, {lookup.ForstName}");
+```
+
+### Create a keyword
+This example creates a new keyword on short number 2002 that forwards incoming SMS messages to 2002 that starts with "HELLO" to the URL the https://your-site.net/api/receive-sms.
+```C#
+var keyword = new Keyword
+{
+    ShortNumberId = "NO-2002",
+    KeywordText = "HELLO",
+    Mode = KeywordModes.Text,
+    ForwardUrl = "https://your-site.net/api/receive-sms",
+    Enabled = true
+};
+
+var keywordId = await serviceClient.CreateKeywordAsync(keyword);
+Console.WriteLine($"Keyword id is {keywordId}");
+```
+
+### SMS forwards
+This example shows how SMS messages are forwarded to the keywords ForwardUrl. All sms forwards expects a response with status code 200 (OK). If the request times out or response status code differs the forward will be retried several times.
+#### Request
+```
+POST https://your-site.net/api/receive-sms HTTP/1.1
+Content-Type: application/json
+Host: your-site.net
+
+{
+  "transactionId":"00568c6b-7baf-4869-b083-d22afc163059",
+  "created":"2019-02-07T21:11:00+00:00",
+  "sender":"+4798079008",
+  "recipient":"2002",
+  "content":"HELLO"
+}
+```
+
+#### Response
+```
+HTTP/1.1 200 OK
+Date: Thu, 07 Feb 2019 21:13:51 GMT
+Content-Length: 0
+```
+
+### Receiving SMS forwards using the SDK
+This example shows how to parse an SMS forward request using the SDK.
+```C#
+[Route("api/receive-sms")]
+public async Task<HttpResponseMessage> PostInMessage(HttpRequestMessage request)
+{
+    var settings = new JsonSerializerSettings
+	{
+        Converters = new List<JsonConverter> { new StringEnumConverter { CamelCaseText = false } },
+    };
+    
+    var message = JsonConvert.DeserializeObject<InMessage>(await request.Content.ReadAsStringAsync(), settings);
+    Console.WriteLine($"Got in-message from {message.Sender} with text '{message.Content}'.");
+    return request.CreateResponse(HttpStatusCode.OK);
+}
+```
