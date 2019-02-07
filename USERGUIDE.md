@@ -10,8 +10,22 @@ Therefore we highly recommend using the SDK and working on a higher level of abs
 If none of the SDKs are a good match you can use our REST API directly.
 Check out our swagger here: <https://test.target365.io/api/swagger.json>
 
+## Table of Contents
+* [Target365Client Setup](#target365client-setup)
+* [Send an SMS](#send-an-sms)
+* [Schedule an SMS for later sending](#schedule-an-sms-for-later-sending)
+* [Edit a scheduled SMS](#edit-a-scheduled-sms)
+* [Delete a scheduled SMS](#delete-a-scheduled-sms)
+* [Create a Strex payment transaction](#create-a-strex-payment-transaction)
+* [Create a Strex payment transaction with one-time password](#create-a-strex-payment-transaction-with-one-time-password)
+* [Reverse a Strex payment transaction](#reverse-a-strex-payment-transaction)
+* [Address lookup for mobile number](#address-lookup-for-mobile-number)
+* [Create a keyword](#create-a-keyword)
+* [SMS forward](#sms-forward)
+* [SMS forward using the SDK](#sms-forward-using-the-sdk)
+
 ## Tutorials
-### Setting up the Target365Client
+### Target365Client Setup
 ```C#
 using System;
 using System.Collections.Generic;
@@ -96,7 +110,7 @@ var transaction = new StrexTransaction
 await serviceClient.CreateStrexTransactionAsync(transaction);
 ```
 
-### Create a Strex payment transaction confirmed by one-time password (OTP)
+### Create a Strex payment transaction with one-time password
 This example creates a Strex one-time password sent to the end user and get completes the payment by using the one-time password.
 ```C#
 transactionId = Guid.NewGuid().ToString();
@@ -158,7 +172,7 @@ var keywordId = await serviceClient.CreateKeywordAsync(keyword);
 Console.WriteLine($"Keyword id is {keywordId}");
 ```
 
-### SMS forwards
+### SMS forward
 This example shows how SMS messages are forwarded to the keywords ForwardUrl. All sms forwards expects a response with status code 200 (OK). If the request times out or response status code differs the forward will be retried several times.
 #### Request
 ```
@@ -182,7 +196,7 @@ Date: Thu, 07 Feb 2019 21:13:51 GMT
 Content-Length: 0
 ```
 
-### Receiving SMS forwards using the SDK
+### SMS forward using the SDK
 This example shows how to parse an SMS forward request using the SDK.
 ```C#
 [Route("api/receive-sms")]
