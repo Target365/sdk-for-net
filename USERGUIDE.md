@@ -198,8 +198,8 @@ This example shows how to parse an SMS forward request using the SDK.
 public async Task<HttpResponseMessage> PostInMessage(HttpRequestMessage request)
 {
     var settings = new JsonSerializerSettings
-	{
-        Converters = new List<JsonConverter> { new StringEnumConverter { CamelCaseText = false } },
+    {
+    	Converters = new List<JsonConverter> { new StringEnumConverter { CamelCaseText = false } },
     };
     
     var message = JsonConvert.DeserializeObject<InMessage>(await request.Content.ReadAsStringAsync(), settings);
