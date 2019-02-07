@@ -4,11 +4,9 @@
 To get started please see the [README.md](README.md).
 
 ## Introduction
-The Target365 SDK is all about direct API access for handling SMS messaging.
-The API is a fairly straight-forward REST API, but it has extremely high security that's hard to implement correctly.
-Therefore we highly recommend using the SDK and working on a higher level of abstraction than HTTP.
-If none of the SDKs are a good match you can use our REST API directly.
-Check out our swagger here: <https://test.target365.io/api/swagger.json>
+The Target365 SDK gives you direct access to our online services like sending and receiving SMS, address lookup and Strex payment transactions. The SDK is based on a fairly straight-forward REST API. The benefits of the SDK over the raw REST API is a higher abstraction level, strong support and an extremely high security (ECDsaP256 HMAC) that's hard to implement correctly.
+The REST API also supports weaker security by using standard API keys over HTTPS (using X-ApiKey HTTP header).
+If you need to implement your own wrapper over the REST API, you can check out our swagger here: <https://test.target365.io/api/swagger.json>
 
 ## Table of Contents
 * [Target365Client Setup](#target365client-setup)
