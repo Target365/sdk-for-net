@@ -1,26 +1,31 @@
 # C# User Guide
 
-## Introduction
-The Target365 SDK gives you direct access to our online services like sending and receiving SMS, address lookup and Strex payment transactions. The SDK is based on a fairly straight-forward REST API. The benefits of the SDK over the raw REST API is a higher abstraction level, strong support and an extremely high security (ECDsaP256 HMAC) that's hard to implement correctly.
-The REST API also supports weaker security by using standard API keys over HTTPS (using X-ApiKey HTTP header).
-If you need to implement your own wrapper over the REST API, you can check out our swagger here: <https://test.target365.io/api/swagger.json>
-
 ## Table of Contents
-* [Target365Client Setup](#target365client-setup)
-* [Send an SMS](#send-an-sms)
-* [Schedule an SMS for later sending](#schedule-an-sms-for-later-sending)
-* [Edit a scheduled SMS](#edit-a-scheduled-sms)
-* [Delete a scheduled SMS](#delete-a-scheduled-sms)
-* [Create a Strex payment transaction](#create-a-strex-payment-transaction)
-* [Create a Strex payment transaction with one-time password](#create-a-strex-payment-transaction-with-one-time-password)
-* [Reverse a Strex payment transaction](#reverse-a-strex-payment-transaction)
-* [Address lookup for mobile number](#address-lookup-for-mobile-number)
-* [Create a keyword](#create-a-keyword)
-* [SMS forward](#sms-forward)
-* [SMS forward using the SDK](#sms-forward-using-the-sdk)
+* [Introduction](#introduction)
+* [Setup](#setup)
+    * [Target365Client](#target365client)
+* [Text messages](#text-messages)
+    * [Send an SMS](#send-an-sms)
+    * [Schedule an SMS for later sending](#schedule-an-sms-for-later-sending)
+    * [Edit a scheduled SMS](#edit-a-scheduled-sms)
+    * [Delete a scheduled SMS](#delete-a-scheduled-sms)
+* [Payment transactions](#payment-transactions)
+    * [Create a Strex payment transaction](#create-a-strex-payment-transaction)
+    * [Create a Strex payment transaction with one-time password](#create-a-strex-payment-transaction-with-one-time-password)
+    * [Reverse a Strex payment transaction](#reverse-a-strex-payment-transaction)
+* [Lookup](#lookup)
+    * [Address lookup for mobile number](#address-lookup-for-mobile-number)
+* [Keywords](#keywords)
+    * [Create a keyword](#create-a-keyword)
+    * [Delete a keyword](#delete-a-keyword)
+    * [SMS forward](#sms-forward)
+    * [SMS forward using the SDK](#sms-forward-using-the-sdk)
 
-## Tutorials
-### Target365Client Setup
+## Introduction
+The Target365 SDK gives you direct access to our online services like sending and receiving SMS, address lookup and Strex payment transactions. The SDK provides an appropriate abstraction level for C# development and is officially support by Target365. The SDK also implements very high security (ECDsaP256 HMAC).
+
+## Setup
+### Target365Client
 ```C#
 using System;
 using System.Collections.Generic;
@@ -41,6 +46,7 @@ var serviceClient = new Target365Client(baseUrl, keyName, privateKey);
 ...
 serviceClient.Dispose() // Remember to dispose the client or use using clauses :)
 ```
+## Text messages
 
 ### Send an SMS
 This example sends an SMS to 98079008 (+47 for Norway) from "Target365" with the text "Hello world from SMS!".
@@ -87,6 +93,7 @@ This example deletes a previously created scheduled SMS.
 ```C#
 await serviceClient.DeleteOutMessageAsync(transactionId);
 ```
+## Payment transactions
 
 ### Create a Strex payment transaction
 This example creates a 1 NOK Strex payment transaction that the end user will confirm by replying "OK" to an SMS from Strex.
@@ -143,6 +150,7 @@ This example reverses a previously billed Strex payment transaction. The origina
 var reversedTransactionId = await serviceClient.ReverseStrexTransactionAsync(transactionId);
 Console.WriteLine($"Reversal transaction id is {reversedTransactionId}");
 ```
+## Lookup
 
 ### Address lookup for mobile number
 This example looks up address information for the mobile number 98079008. Lookup information includes registered name and address.
@@ -150,6 +158,8 @@ This example looks up address information for the mobile number 98079008. Lookup
 var lookup = await serviceClient.LookupAsync("+4798079008");
 Console.WriteLine("Mobile number 98079008 is registered to {lookup.LastName}, {lookup.ForstName}");
 ```
+
+## Keywords
 
 ### Create a keyword
 This example creates a new keyword on short number 2002 that forwards incoming SMS messages to 2002 that starts with "HELLO" to the URL the https://your-site.net/api/receive-sms.
@@ -165,6 +175,12 @@ var keyword = new Keyword
 
 var keywordId = await serviceClient.CreateKeywordAsync(keyword);
 Console.WriteLine($"Keyword id is {keywordId}");
+```
+
+### Delete a keyword
+This example deletes a keyword.
+```C#
+await serviceClient.CreateKeywordAsync(keywordId);
 ```
 
 ### SMS forward
