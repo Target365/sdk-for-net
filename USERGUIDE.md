@@ -60,7 +60,6 @@ var outMessage = new OutMessage
 };
 
 await serviceClient.CreateOutMessageAsync(outMessage);
-Console.WriteLine($"Out-message created with transaction id {outMessage.TransactionId}");
 ```
 
 ### Schedule an SMS for later sending
@@ -76,7 +75,6 @@ var outMessage = new OutMessage
 };
 
 await serviceClient.CreateOutMessageAsync(outMessage);
-Console.WriteLine($"Out-message scheduled to be sent in 2 hours.");
 ```
 
 ### Edit a scheduled SMS
@@ -147,8 +145,7 @@ await serviceClient.CreateStrexTransactionAsync(transaction);
 ### Reverse a Strex payment transaction
 This example reverses a previously billed Strex payment transaction. The original transaction will not change, but a reversal transaction will be created that counters the previous transaction by a negative Price. The reversal is an asynchronous operation that usually takes a few seconds to finish.
 ```C#
-var reversedTransactionId = await serviceClient.ReverseStrexTransactionAsync(transactionId);
-Console.WriteLine($"Reversal transaction id is {reversedTransactionId}");
+var reversalTransactionId = await serviceClient.ReverseStrexTransactionAsync(transactionId);
 ```
 ## Lookup
 
@@ -156,13 +153,14 @@ Console.WriteLine($"Reversal transaction id is {reversedTransactionId}");
 This example looks up address information for the mobile number 98079008. Lookup information includes registered name and address.
 ```C#
 var lookup = await serviceClient.LookupAsync("+4798079008");
-Console.WriteLine("Mobile number 98079008 is registered to {lookup.LastName}, {lookup.ForstName}");
+var firstName = lookup.FirstName;
+var lastName = lookup.LastName;
 ```
 
 ## Keywords
 
 ### Create a keyword
-This example creates a new keyword on short number 2002 that forwards incoming SMS messages to 2002 that starts with "HELLO" to the URL the https://your-site.net/api/receive-sms.
+This example creates a new keyword on short number 2002 that forwards incoming SMS messages to 2002 that starts with "HELLO" to the URL  "https://your-site.net/api/receive-sms".
 ```C#
 var keyword = new Keyword
 {
@@ -174,13 +172,12 @@ var keyword = new Keyword
 };
 
 var keywordId = await serviceClient.CreateKeywordAsync(keyword);
-Console.WriteLine($"Keyword id is {keywordId}");
 ```
 
 ### Delete a keyword
 This example deletes a keyword.
 ```C#
-await serviceClient.CreateKeywordAsync(keywordId);
+await serviceClient.DeleteKeywordAsync(keywordId);
 ```
 
 ### SMS forward
@@ -219,7 +216,6 @@ public async Task<HttpResponseMessage> PostInMessage(HttpRequestMessage request)
     };
     
     var message = JsonConvert.DeserializeObject<InMessage>(await request.Content.ReadAsStringAsync(), settings);
-    Console.WriteLine($"Got in-message from {message.Sender} with text '{message.Content}'.");
     return request.CreateResponse(HttpStatusCode.OK);
 }
 ```
