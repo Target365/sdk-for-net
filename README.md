@@ -18,6 +18,16 @@ PM> Install-Package Target365.Sdk
 ```
 [![NuGet](https://buildstats.info/nuget/target365.sdk)](https://www.nuget.org/packages/Target365.Sdk)
 
+### Test Environment
+Our test-environment acts as a sandbox that simulates the real API as closely as possible. This can be used to get familiar with service before going to production. Please be ware that the simulation isn't perfect and must not be taken to have 100% fidelity.
+
+#### Url: https://test.target365.io/
+
+### Production Environment
+Our production environment is a mix of per-tenant isolated environments and a shared common environment. Contact <support@target365.no> if you're interested in an isolated per-tenant environment.
+
+#### Url: https://shared.target365.io/
+
 ### Generate EC public/private key-pair in C#
 ```C#
 using System;
