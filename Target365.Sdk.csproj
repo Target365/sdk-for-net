@@ -10,7 +10,7 @@
   <PropertyGroup>
     <TargetFrameworks>net46;net461;net462;net47;net471;net472;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.2.0</Version>
+    <Version>1.3.1</Version>
     <Authors>Target365</Authors>
     <Company>Target365</Company>
     <Product>Target365 SDK</Product>
@@ -22,9 +22,9 @@
     <AssemblyOriginatorKeyFile>Target365.Sdk.snk</AssemblyOriginatorKeyFile>
     <PackageIconUrl>https://target365content.blob.core.windows.net/public/target365_nuget_logo.png</PackageIconUrl>
     <LangVersion>latest</LangVersion>
-    <PackageProjectUrl>https://github.com/Target365/sdk-for-csharp</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/Target365/sdk-for-csharp/blob/master/LICENSE</PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/Target365/sdk-for-csharp/blob/master/LICENSE</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Target365/sdk-for-net</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Target365/sdk-for-net/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/Target365/sdk-for-net</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
