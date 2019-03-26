@@ -95,10 +95,16 @@ namespace Target365.Sdk
 		public DateTimeOffset Created { get; set; }
 
 		/// <summary>
-		/// Delivery status code.
+		/// Overall status code.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public string StatusCode { get; set; }
+
+		/// <summary>
+		/// Detailed status code.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public string DetailedStatusCode { get; set; }
 
 		/// <summary>
 		/// Whether message was delivered. Null if status is unknown.
@@ -126,6 +132,18 @@ namespace Target365.Sdk
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public bool? AllowUnicode { get; set; }
+
+		/// <summary>
+		/// External SMSC transaction id.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public string SmscTransactionId { get; set; }
+
+		/// <summary>
+		/// SMSC message parts.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public int SmscMessageParts { get; set; }
 
 		/// <summary>
 		/// Tags associated with message. Can be used for statistics and grouping.

@@ -51,6 +51,12 @@ namespace Target365.Sdk
 		public string StatusCode { get; set; }
 
 		/// <summary>
+		/// Detailed status code.
+		/// </summary>
+		[DataMember]
+		public string DetailedStatusCode { get; set; }
+
+		/// <summary>
 		/// Whether message was delivered. Null if status is unknown.
 		/// </summary>
 		[DataMember]
@@ -61,5 +67,11 @@ namespace Target365.Sdk
 		/// </summary>
 		[DataMember]
 		public bool? Billed { get; set; }
+
+		/// <summary>
+		/// SMSC message parts.
+		/// </summary>
+		[DataMember]
+		public int SmscMessageParts { get; set; }
 	}
 }
