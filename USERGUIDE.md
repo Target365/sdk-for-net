@@ -18,6 +18,7 @@
 * [Keywords](#keywords)
     * [Create a keyword](#create-a-keyword)
     * [Delete a keyword](#delete-a-keyword)
+* [Forwards](#forwards)
     * [SMS forward](#sms-forward)
     * [SMS forward using the SDK](#sms-forward-using-the-sdk)
     * [DLR forward](#dlr-forward)
@@ -181,6 +182,8 @@ This example deletes a keyword.
 ```C#
 await serviceClient.DeleteKeywordAsync(keywordId);
 ```
+
+## Forwards
 
 ### SMS forward
 This example shows how SMS messages are forwarded to the keywords ForwardUrl. All sms forwards expects a response with status code 200 (OK). If the request times out or response status code differs the forward will be retried several times.
