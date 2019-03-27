@@ -20,6 +20,8 @@
     * [Delete a keyword](#delete-a-keyword)
     * [SMS forward](#sms-forward)
     * [SMS forward using the SDK](#sms-forward-using-the-sdk)
+    * [DLR forward](#dlr-forward)
+    * [DLR forward using the SDK](#dlr-forward-using-the-sdk)
 
 ## Introduction
 The Target365 SDK gives you direct access to our online services like sending and receiving SMS, address lookup and Strex payment transactions. The SDK provides an appropriate abstraction level for C# development and is officially support by Target365. The SDK also implements very high security (ECDsaP256 HMAC).
@@ -216,6 +218,52 @@ public async Task<HttpResponseMessage> PostInMessage(HttpRequestMessage request)
     };
     
     var message = JsonConvert.DeserializeObject<InMessage>(await request.Content.ReadAsStringAsync(), settings);
+    return request.CreateResponse(HttpStatusCode.OK);
+}
+```
+
+### DLR forward
+#### Request
+```
+POST https://your-site.net/api/receive-dlr HTTP/1.1
+Content-Type: application/json
+Host: your-site.net
+
+{
+    "correlationId": null,
+    "transactionId": "client-specified-id-5c88e736bb4b8",
+    "price": null,
+    "sender": "Target365",
+    "recipient": "+4798079008",
+    "operatorId": "no.telenor",
+    "statusCode": "Ok",
+    "detailedStatusCode": "Delivered",
+    "delivered": true,
+    "billed": null,
+    "smscTransactionId": "16976c7448d",
+    "smscMessageParts": 1
+}
+```
+
+#### Response
+```
+HTTP/1.1 200 OK
+Date: Thu, 07 Feb 2019 21:13:51 GMT
+Content-Length: 0
+```
+
+### DLR forward using the SDK
+This example shows how to parse an DLR forward request using the SDK.
+```C#
+[Route("api/receive-sms")]
+public async Task<HttpResponseMessage> PostDeliveryReport(HttpRequestMessage request)
+{
+    var settings = new JsonSerializerSettings
+    {
+    	Converters = new List<JsonConverter> { new StringEnumConverter { CamelCaseText = false } },
+    };
+    
+    var message = JsonConvert.DeserializeObject<DeliveryReport>(await request.Content.ReadAsStringAsync(), settings);
     return request.CreateResponse(HttpStatusCode.OK);
 }
 ```
