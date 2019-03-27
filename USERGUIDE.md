@@ -255,7 +255,7 @@ Content-Length: 0
 ### DLR forward using the SDK
 This example shows how to parse an DLR forward request using the SDK.
 ```C#
-[Route("api/receive-sms")]
+[Route("api/receive-dlr")]
 public async Task<HttpResponseMessage> PostDeliveryReport(HttpRequestMessage request)
 {
     var settings = new JsonSerializerSettings
