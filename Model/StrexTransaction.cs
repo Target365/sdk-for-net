@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Target365.Sdk
@@ -73,5 +74,17 @@ namespace Target365.Sdk
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public DateTimeOffset LastModified { get; set; }
+
+		/// <summary>
+		/// Tags associated with transaction. Can be used for statistics and grouping.
+		/// </summary>
+		[DataMember]
+		public ICollection<string> Tags { get; set; } = new HashSet<string>();
+
+		/// <summary>
+		/// Custom properties associated with the transaction.
+		/// </summary>
+		[DataMember]
+		public IDictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
 	}
 }
