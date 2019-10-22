@@ -2,6 +2,7 @@
 
 ## Table of Contents
 * [Introduction](#introduction)
+* [Generate private-public key pair](#generate-private-public-key-pair)
 * [Setup](#setup)
     * [Target365Client](#target365client)
 * [Text messages](#text-messages)
@@ -27,6 +28,52 @@
 ## Introduction
 The Target365 SDK gives you direct access to our online services like sending and receiving SMS, address lookup and Strex payment transactions. The SDK provides an appropriate abstraction level for C# development and is officially support by Target365. The SDK also implements very high security (ECDsaP256 HMAC).
 
+## Generate private-public key pair
+```C#
+using System;
+using System.Linq;
+using System.Security.Cryptography;
+
+namespace Target365KeyGen
+{
+    class Program
+    {
+        static void Main()
+        {
+            var keyParams = new CngKeyCreationParameters
+            {
+                ExportPolicy = CngExportPolicies.AllowPlaintextExport,
+                KeyUsage = CngKeyUsages.Decryption | CngKeyUsages.Signing
+            };
+
+            using (var cngKey = CngKey.Create(CngAlgorithm.ECDsaP256, null, keyParams))
+            using (var cng = new ECDsaCng(cngKey))
+            {
+                var privateKey = Convert.ToBase64String(cng.Key.Export(CngKeyBlobFormat.EccPrivateBlob));
+                var publicKeyBytes = cng.Key.Export(CngKeyBlobFormat.EccPublicBlob);
+                var derPublicKey = Convert.ToBase64String(CngEcPublicBlobToDerAns1(publicKeyBytes));
+
+                Console.WriteLine($".NET client private key:");
+                Console.WriteLine(privateKey);
+                Console.WriteLine();
+
+                Console.WriteLine($"Target365 public key:");
+                Console.WriteLine(derPublicKey);
+                Console.WriteLine();
+            }
+        }
+
+        public static byte[] CngEcPublicBlobToDerAns1(byte[] cngEcPublicBlob)
+        {
+            var secp256r1Prefix = Convert.FromBase64String("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE");
+            var rawKey = cngEcPublicBlob.Skip(8);
+            return secp256r1Prefix.Concat(rawKey).ToArray();
+        }
+    }
+}
+
+```
+
 ## Setup
 ### Target365Client
 ```C#
@@ -36,7 +83,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Target365.Sdk;
 
-// Set up .NET Service Point Manager for high performance
+// ONLY FOR .NET FRAMEWORK: Set up Service Point Manager for high performance
 ServicePointManager.CheckCertificateRevocationList = false;
 ServicePointManager.DefaultConnectionLimit = 64;
 ServicePointManager.Expect100Continue = false;
