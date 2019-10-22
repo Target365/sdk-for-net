@@ -155,6 +155,7 @@ var transaction = new StrexTransaction
     Price = 1,
     ServiceCode = ServiceCodes.NonCommercialDonation,
     InvoiceText = "Donation test",
+    SmsConfirmation = true,
 };
 
 await serviceClient.CreateStrexTransactionAsync(transaction);
