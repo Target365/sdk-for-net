@@ -3,9 +3,7 @@
 
 ### Getting started
 To get started please send us an email at <support@target365.no> containing your EC public key in DER(ANS.1) format.
-If you want, you can generate your EC public/private key-pair here: <https://8gwifi.org/sshfunctions.jsp>.
-
-Check out our [C# User Guide](USERGUIDE.md).
+See our [C# User Guide](USERGUIDE.md) on how to generate your private-public key pair in C#.
 
 ### NuGet
 ```
