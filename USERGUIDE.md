@@ -14,6 +14,10 @@
     * [Create a Strex payment transaction](#create-a-strex-payment-transaction)
     * [Create a Strex payment transaction with one-time password](#create-a-strex-payment-transaction-with-one-time-password)
     * [Reverse a Strex payment transaction](#reverse-a-strex-payment-transaction)
+* [One-click transactions](#one-click-transactions)
+    * [One-time transaction](#one-time-transaction)
+    * [Setup subscription transaction](#setup-subscription-transaction)
+    * [Recurring transaction](#recurring-transaction)
 * [Lookup](#lookup)
     * [Address lookup for mobile number](#address-lookup-for-mobile-number)
 * [Keywords](#keywords)
@@ -198,6 +202,70 @@ This example reverses a previously billed Strex payment transaction. The origina
 ```C#
 var reversalTransactionId = await serviceClient.ReverseStrexTransactionAsync(transactionId);
 ```
+
+## One-click transactions
+
+### One-time transaction
+This example sets up a simple one-time transaction for one-click. After creation you can redirect the end-user to the one-click landing page by redirecting to http://betal.strex.no/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for PROD and http://strex-test.target365.io/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for TEST-environment.
+![one-time sequence](https://github.com/Target365/sdk-for-net/raw/master/oneclick-simple-transaction-flow.png "One-time sequence diagram")
+
+```C#
+var transaction = new StrexTransaction
+{
+    TransactionId = transactionId,
+    ShortNumber = "2002",
+    MerchantId = "YOUR_MERCHANT_ID",
+    Price = 1,
+    ServiceCode = ServiceCodes.NonCommercialDonation,
+    InvoiceText = "Donation test"
+};
+
+transaction.Properties["RedirectUrl"] = "https://your-return-url.com?id=" + transactionId;
+await serviceClient.CreateStrexTransactionAsync(transaction);
+
+// TODO: Redirect end-user to one-click landing page
+```
+### Setup subscription transaction
+This example sets up a subscription transaction for one-click. After creation you can redirect the end-user to the one-click landing page by redirecting to http://betal.strex.no/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for PROD and http://strex-test.target365.io/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for TEST-environment.
+![subscription sequence](https://github.com/Target365/sdk-for-net/raw/master/oneclick-subscription-flow.png "Subscription sequence diagram")
+```C#
+var transaction = new StrexTransaction
+{
+    TransactionId = transactionId,
+    ShortNumber = "2002",
+    MerchantId = "YOUR_MERCHANT_ID",
+    Price = 1,
+    ServiceCode = ServiceCodes.NonCommercialDonation,
+    InvoiceText = "Donation test"
+};
+
+transaction.Properties["Recurring"] = true;
+transaction.Properties["RedirectUrl"] = "https://your-return-url.com?id=" + transactionId;
+await serviceClient.CreateStrexTransactionAsync(transaction);
+
+// TODO: Redirect end-user to one-click landing page
+```
+### Recurring transaction
+This example sets up a recurring transaction for one-click. After creation you can immediately get the transaction to get the status code - the server will wait up to 20 seconds for the async transaction to complete.
+![Recurring sequence](https://github.com/Target365/sdk-for-net/raw/master/oneclick-recurring-flow.png "Recurring sequence diagram")
+```C#
+var transaction = new StrexTransaction
+{
+    TransactionId = transactionId,
+    Recipient = "RECIPIENT_FROM_SUBSCRIPTION_TRANSACTION"
+    ShortNumber = "2002",
+    MerchantId = "YOUR_MERCHANT_ID",
+    Price = 1,
+    ServiceCode = ServiceCodes.NonCommercialDonation,
+    InvoiceText = "Donation test"
+};
+
+await serviceClient.CreateStrexTransactionAsync(transaction);
+transaction = await serviceClient.GetStrexTransactionAsync(transactionId);
+
+// TODO: Check transaction.StatusCode
+```
+
 ## Lookup
 
 ### Address lookup for mobile number
