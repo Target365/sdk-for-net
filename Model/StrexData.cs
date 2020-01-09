@@ -21,6 +21,18 @@ namespace Target365.Sdk
 		public string ServiceCode { get; set; }
 
 		/// <summary>
+		/// Business model.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public string BusinessModel { get; set; }
+
+		/// <summary>
+		/// Whether to use sms confirmation.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public bool? SmsConfirmation { get; set; }
+
+		/// <summary>
 		/// Invoice text.
 		/// </summary>
 		[DataMember]
@@ -33,9 +45,21 @@ namespace Target365.Sdk
 		public decimal Price { get; set; }
 
 		/// <summary>
-		/// Read-only: Whether billing was performed. Null if status is unknown.
+		/// Whether billing was performed. Null if status is unknown.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public bool? Billed { get; set; }
+
+		/// <summary>
+		/// Strex result code.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public string ResultCode { get; set; }
+
+		/// <summary>
+		/// Strex result description.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public string ResultDescription { get; set; }
 	}
 }
