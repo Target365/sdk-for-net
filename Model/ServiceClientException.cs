@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Target365.Sdk
 {
+	/// <summary>
+	/// Service client exception.
+	/// </summary>
 	public class ServiceClientException : Exception
 	{
 		/// <summary>

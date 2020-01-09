@@ -52,7 +52,7 @@ namespace Target365.Sdk
 		/// <summary>
 		/// Creates a new strex transaction.
 		/// </summary>
-		/// <param name="transactionId">Strex transaction object.</param>
+		/// <param name="transaction">Strex transaction object.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		Task<string> CreateStrexTransactionAsync(StrexTransaction transaction, CancellationToken cancellationToken = default(CancellationToken));
 
@@ -66,7 +66,7 @@ namespace Target365.Sdk
 		/// <summary>
 		/// Reverses a strex transaction and returns the resulting reversal transaction id.
 		/// </summary>
-		/// <param name="transaction">Strex transaction id.</param>
+		/// <param name="transactionId">Strex transaction id.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		Task<string> ReverseStrexTransactionAsync(string transactionId, CancellationToken cancellationToken = default(CancellationToken));
 	}

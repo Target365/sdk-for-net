@@ -295,6 +295,12 @@ namespace Target365.Sdk
 			}
 		}
 
+		/// <summary>
+		/// Gets an in-message.
+		/// </summary>
+		/// <param name="shortNumberId">Short number id.</param>
+		/// <param name="transactionId">In-message transaction id.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		public async Task<InMessage> GetInMessageAsync(string shortNumberId, string transactionId, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(shortNumberId)) throw new ArgumentException("shortNumberId cannot be null or empty string.");
@@ -645,7 +651,7 @@ namespace Target365.Sdk
 		/// <summary>
 		/// Reverses a strex transaction and returns the resulting reversal transaction id.
 		/// </summary>
-		/// <param name="transaction">Strex transaction id.</param>
+		/// <param name="transactionId">Strex transaction id.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		public async Task<string> ReverseStrexTransactionAsync(string transactionId, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -687,6 +693,10 @@ namespace Target365.Sdk
 			}
 		}
 
+		/// <summary>
+		/// Gets client public key used for verifying incoming http requests.
+		/// </summary>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		public async Task<PublicKey[]> GetClientPublicKeysAsync(CancellationToken cancellationToken = default)
 		{
 			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, "api/client/public-keys"));
@@ -704,6 +714,11 @@ namespace Target365.Sdk
 			}
 		}
 
+		/// <summary>
+		/// Gets a client public key.
+		/// </summary>
+		/// <param name="keyName">Key name.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		public async Task<PublicKey> GetClientPublicKeyAsync(string keyName, CancellationToken cancellationToken = default)
 		{
 			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/client/public-keys/{WebUtility.UrlEncode(keyName)}"));
