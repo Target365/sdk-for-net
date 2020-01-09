@@ -9,16 +9,16 @@ namespace Target365.Sdk
 	public class DeliveryReport
 	{
 		/// <summary>
-		/// Correlation id associated with the message.
-		/// </summary>
-		[DataMember]
-		public string CorrelationId { get; set; }
-
-		/// <summary>
 		/// Transaction id associated with the message.
 		/// </summary>
 		[DataMember]
 		public string TransactionId { get; set; }
+
+		/// <summary>
+		/// Correlation id associated with the message.
+		/// </summary>
+		[DataMember]
+		public string CorrelationId { get; set; }
 
 		/// <summary>
 		/// Price associated with the message.
@@ -29,23 +29,23 @@ namespace Target365.Sdk
 		/// <summary>
 		/// Sender associated with the message.
 		/// </summary>
-		[DataMember(IsRequired = true)]
+		[DataMember]
 		public string Sender { get; set; }
 
 		/// <summary>
 		/// Recipient associated with the message.
 		/// </summary>
-		[DataMember(IsRequired = true)]
+		[DataMember]
 		public string Recipient { get; set; }
 
 		/// <summary>
-		/// Operator associated with the message. Can be 'telenor', 'netcom', 'ice' or 'networknorway'.
+		/// Operator id associated with the message. Can be 'no.telenor', 'no.telia', 'no.ice' etc.
 		/// </summary>
-		[DataMember(IsRequired = true)]
-		public string Operator { get; set; }
+		[DataMember]
+		public string OperatorId { get; set; }
 
 		/// <summary>
-		/// Delivery status code.
+		/// Overall status code.
 		/// </summary>
 		[DataMember]
 		public string StatusCode { get; set; }
@@ -67,6 +67,12 @@ namespace Target365.Sdk
 		/// </summary>
 		[DataMember]
 		public bool? Billed { get; set; }
+
+		/// <summary>
+		/// SMSC transaction id.
+		/// </summary>
+		[DataMember]
+		public string SmscTransactionId { get; set; }
 
 		/// <summary>
 		/// SMSC message parts.
