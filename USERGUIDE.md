@@ -407,8 +407,8 @@ Delivery reports contains two status codes, one overall called `StatusCode` and 
 |Delivered|Message is delivered to destination|
 |Expired|Message validity period has expired|
 |Undelivered|Message is undeliverable|
-|UnknownError|Message is in invalid state|
-|Rejected|Message is in a rejected state|
+|UnknownError|Unknown error|
+|Rejected|Message has been rejected|
 |UnknownSubscriber|Unknown subscriber|
 |SubscriberUnavailable|Subscriber unavailable|
 |SubscriberBarred|Subscriber barred|
