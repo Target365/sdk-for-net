@@ -28,6 +28,7 @@
     * [SMS forward using the SDK](#sms-forward-using-the-sdk)
     * [DLR forward](#dlr-forward)
     * [DLR forward using the SDK](#dlr-forward-using-the-sdk)
+    * [DLR status codes](#dlr-status-codes)
 
 ## Introduction
 The Target365 SDK gives you direct access to our online services like sending and receiving SMS, address lookup and Strex payment transactions. The SDK provides an appropriate abstraction level for C# development and is officially support by Target365. The SDK also implements very high security (ECDsaP256 HMAC).
@@ -387,3 +388,38 @@ public async Task<HttpResponseMessage> PostDeliveryReport(HttpRequestMessage req
     return request.CreateResponse(HttpStatusCode.OK);
 }
 ```
+### DLR status codes
+Delivery reports contains two status codes, one overall called `StatusCode` and one detailed called `DetailedStatusCode`.
+
+#### StatusCode values
+|Value|Description|
+|:---|:---|
+|Queued|Message is queued|
+|Sent|Message has been sent|
+|Failed|Message has failed|
+|Ok|message has been delivered/billed|
+|Reversed|Message billing has been reversed|
+
+#### DetailedStatusCode values
+|Value|Description|
+|:---|:---|
+|None|Message has no status|
+|Delivered|Message is delivered to destination|
+|Expired|Message validity period has expired|
+|Undelivered|Message is undeliverable|
+|UnknownError|Message is in invalid state|
+|Rejected|Message is in a rejected state|
+|UnknownSubscriber|Unknown subscriber|
+|SubscriberUnavailable|Subscriber unavailable|
+|SubscriberBarred|Subscriber barred|
+|InsufficientFunds|Insufficient funds|
+|RegistrationRequired|Registration required|
+|UnknownAge|Unknown age|
+|DuplicateTransaction|Duplicate transaction|
+|SubscriberLimitExceeded|Subscriber limit exceeded|
+|MaxPinRetry|Max pin retry reached|
+|InvalidAmount|Invalid amount|
+|OneTimePasswordExpired|One-time password expired|
+|OneTimePasswordFailed|One-time password failed|
+|SubscriberTooYoung|Subscriber too young|
+|TimeoutError|Timeout error|
