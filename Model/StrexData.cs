@@ -9,19 +9,19 @@ namespace Target365.Sdk
 	public class StrexData
 	{
 		/// <summary>
-		/// merchant id.
+		/// Merchant id - provided by Strex.
 		/// </summary>
 		[DataMember]
 		public string MerchantId { get; set; }
 
 		/// <summary>
-		/// Service code.
+		/// Service code - provided by Strex. See <see cref="ServiceCodes"/>.
 		/// </summary>
 		[DataMember]
 		public string ServiceCode { get; set; }
 
 		/// <summary>
-		/// Business model.
+		/// Business model - optional and provided by Strex.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public string BusinessModel { get; set; }
@@ -33,31 +33,31 @@ namespace Target365.Sdk
 		public bool? SmsConfirmation { get; set; }
 
 		/// <summary>
-		/// Invoice text.
+		/// Invoice text - this shows up on the end users invoice from the mobile operator.
 		/// </summary>
 		[DataMember]
 		public string InvoiceText { get; set; }
 
 		/// <summary>
-		/// Price.
+		/// Price - price to charge in whole NOK. Two decimals are supported (øre).
 		/// </summary>
 		[DataMember]
 		public decimal Price { get; set; }
 
 		/// <summary>
-		/// Whether billing was performed. Null if status is unknown.
+		/// Read-only: Whether billing was performed. Null if status is unknown.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public bool? Billed { get; set; }
 
 		/// <summary>
-		/// Strex result code.
+		/// Read-only: Strex payment gateway result code.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public string ResultCode { get; set; }
 
 		/// <summary>
-		/// Strex result description.
+		/// Read-only: Strex payment gateway result description.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public string ResultDescription { get; set; }
