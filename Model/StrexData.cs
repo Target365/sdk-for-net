@@ -27,6 +27,18 @@ namespace Target365.Sdk
 		public string BusinessModel { get; set; }
 
 		/// <summary>
+		/// Age requirements - typically 18 for subscriptions and adult content. Default value is 0.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public int Age { get; set; }
+
+		/// <summary>
+		/// Whether the transaction should be flagged as restricted - provided by Strex.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public bool IsRestricted { get; set; }
+
+		/// <summary>
 		/// Whether to use sms confirmation.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]

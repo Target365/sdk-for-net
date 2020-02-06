@@ -19,13 +19,13 @@ namespace Target365.Sdk
 	/// </summary>
 	public class Target365Client : ILookupClient, IKeywordClient, IInMessageClient, IOutMessageClient, IStrexClient, IPublicKeysClient, IVerificationClient, IDisposable
 	{
-		private static Lazy<HttpClient> _staticHttpClient = new Lazy<HttpClient>(CreateHttpClient, true);
+		private static readonly Lazy<HttpClient> _staticHttpClient = new Lazy<HttpClient>(CreateHttpClient, true);
 		private static Dictionary<string, PublicKey> _publicKeys = new Dictionary<string, PublicKey>();
-		private HttpClient _httpClient = new HttpClient();
+		private readonly HttpClient _httpClient;
 		private readonly string _keyName;
 		private readonly CngKey _cngPublicKey;
 
-		private static JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
+		private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
 		{
 			Converters = new List<JsonConverter>
 			{
@@ -49,7 +49,8 @@ namespace Target365.Sdk
 		/// <param name="keyName">Key name registered as a public key with Target365.</param>
 		/// <param name="privateKey">Private key as a base64-encoded string.</param>
 		/// <param name="httpTimeout">Http timeout for client. Minimum 30 seconds and default value is 60.</param>
-		public Target365Client(Uri baseUrl, string keyName, string privateKey, TimeSpan? httpTimeout = null)
+		/// <param name="httpMessageHandler">Http message handler to inject.</param>
+		public Target365Client(Uri baseUrl, string keyName, string privateKey, TimeSpan? httpTimeout = null, HttpMessageHandler httpMessageHandler = null)
 		{
 			if (baseUrl == null) throw new ArgumentException("baseUrl cannot be null.");
 			if (string.IsNullOrEmpty(keyName)) throw new ArgumentException($"{nameof(keyName)} cannot be null or empty.");
@@ -71,6 +72,7 @@ namespace Target365.Sdk
 			else
 				_cngPublicKey = CngKey.Import(Convert.FromBase64String(privateKey), CngKeyBlobFormat.EccPrivateBlob);
 
+			_httpClient = new HttpClient(httpMessageHandler ?? new HttpClientHandler());
 			_httpClient.BaseAddress = baseUrl;
 			_httpClient.DefaultRequestHeaders.Accept.Clear();
 			_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
