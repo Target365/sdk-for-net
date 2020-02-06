@@ -95,13 +95,13 @@ namespace Target365.Sdk
 		public DateTimeOffset Created { get; set; }
 
 		/// <summary>
-		/// Overall status code.
+		/// Overall status code. See <see cref="StatusCodes"/>.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public string StatusCode { get; set; }
 
 		/// <summary>
-		/// Detailed status code.
+		/// Detailed status code. See <see cref="DetailedStatusCodes"/>.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public string DetailedStatusCode { get; set; }

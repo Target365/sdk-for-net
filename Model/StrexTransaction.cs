@@ -58,10 +58,16 @@ namespace Target365.Sdk
 		public DeliveryModes DeliveryMode { get; set; } = DeliveryModes.AtMostOnce;
 
 		/// <summary>
-		/// Delivery status code.
+		/// Status code. See <see cref="StatusCodes"/>.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public string StatusCode { get; set; }
+
+		/// <summary>
+		/// Detailed status code. See <see cref="DetailedStatusCodes" />.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public string DetailedStatusCode { get; set; }
 
 		/// <summary>
 		/// Created time.
