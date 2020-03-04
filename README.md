@@ -5,7 +5,8 @@ Strex AS is a Norwegian payment and SMS gateway (Strex Connect) provider. Strex 
 [![License](https://img.shields.io/github/license/Target365/sdk-for-net.svg?style=flat)](https://opensource.org/licenses/MIT)
 
 ### Getting started
-To get started please send us an email at <sdk@strex.no> containing your EC public key in DER(ANS.1) format.
+To get started, please click here: https://strex.no/strex-connect#Prispakker and register your organisation. 
+For the SDK please send us an email at <sdk@strex.no> containing your EC public key in DER(ANS.1) format.
 See our [C# User Guide](USERGUIDE.md) on how to generate your private-public key pair in C#.
 
 ### NuGet
