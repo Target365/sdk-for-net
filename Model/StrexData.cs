@@ -45,7 +45,7 @@ namespace Target365.Sdk
 		public bool? SmsConfirmation { get; set; }
 
 		/// <summary>
-		/// Invoice text - this shows up on the end users invoice from the mobile operator.
+		/// Invoice text - this shows up on the Strex portal for end users.
 		/// </summary>
 		[DataMember]
 		public string InvoiceText { get; set; }
