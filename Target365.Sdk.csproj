@@ -10,7 +10,7 @@
   <PropertyGroup>
     <TargetFrameworks>net46;net461;net462;net47;net471;net472;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.3.9</Version>
+    <Version>1.4.0</Version>
     <Authors>Target365</Authors>
     <Company>Target365</Company>
     <Product>Target365 SDK</Product>
@@ -27,8 +27,8 @@
     <RepositoryUrl>https://github.com/Target365/sdk-for-net</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>target365_nuget_logo.png</PackageIcon>
-    <AssemblyVersion>1.3.9.0</AssemblyVersion>
-    <FileVersion>1.3.9.0</FileVersion>
+    <AssemblyVersion>1.4.0.0</AssemblyVersion>
+    <FileVersion>1.4.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

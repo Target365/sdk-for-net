@@ -40,7 +40,19 @@ namespace Target365.Sdk
 		public string Sender { get; set; }
 
 		/// <summary>
-		/// One-time password SMS message text.
+		/// Text string which will be prepended to the standard Strex SMS message sent to the subscriber.
+		/// </summary>
+		[DataMember]
+		public string MessagePrefix { get; set; }
+
+		/// <summary>
+		/// Text string which will be appended to the standard Strex SMS message sent to the subscriber.
+		/// </summary>
+		[DataMember]
+		public string MessageSuffix { get; set; }
+
+		/// <summary>
+		/// Deprecated, use MessagePrefix and MessageSuffix instead.
 		/// </summary>
 		[DataMember]
 		public string Message { get; set; }
