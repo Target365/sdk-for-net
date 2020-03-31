@@ -165,6 +165,9 @@ var transaction = new StrexTransaction
     SmsConfirmation = true,
 };
 
+transaction.Properties["message_prefix"] = "Dear customer...";
+transaction.Properties["message_suffix"] = "Best regards...";
+
 await serviceClient.CreateStrexTransactionAsync(transaction);
 ```
 
