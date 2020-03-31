@@ -149,7 +149,7 @@ await serviceClient.DeleteOutMessageAsync(transactionId);
 ## Payment transactions
 
 ### Create a Strex payment transaction
-This example creates a 1 NOK Strex payment transaction that the end user will confirm by replying "OK" to an SMS from Strex.
+This example creates a 1 NOK Strex payment transaction that the end user will confirm by replying "OK" to an SMS from Strex. You can use MessagePrefix and MessageSuffix to influence the start and end of the SMS sent by Strex.
 ```C#
 var transaction = new StrexTransaction
 {
@@ -160,6 +160,8 @@ var transaction = new StrexTransaction
     Price = 1,
     ServiceCode = ServiceCodes.NonCommercialDonation,
     InvoiceText = "Donation test",
+    MessagePrefix = "Dear customer...",
+    MessageSuffix = "Best Regards..."
     SmsConfirmation = true,
 };
 
@@ -167,7 +169,7 @@ await serviceClient.CreateStrexTransactionAsync(transaction);
 ```
 
 ### Create a Strex payment transaction with one-time password
-This example creates a Strex one-time password sent to the end user and get completes the payment by using the one-time password.
+This example creates a Strex one-time password sent to the end user and get completes the payment by using the one-time password. You can use MessagePrefix and MessageSuffix to influence the start and end of the SMS sent by Strex.
 ```C#
 transactionId = Guid.NewGuid().ToString();
 
@@ -176,6 +178,8 @@ var oneTimePassword = new OneTimePassword
     TransactionId = transactionId,
     MerchantId = "YOUR_MERCHANT_ID",
     Recipient = "+4798079008",
+    MessagePrefix = "Dear customer...",
+    MessageSuffix = "Best Regards..."
     Recurring = false
 };
 
