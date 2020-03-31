@@ -149,7 +149,8 @@ await serviceClient.DeleteOutMessageAsync(transactionId);
 ## Payment transactions
 
 ### Create a Strex payment transaction
-This example creates a 1 NOK Strex payment transaction that the end user will confirm by replying "OK" to an SMS from Strex. You can use MessagePrefix and MessageSuffix to influence the start and end of the SMS sent by Strex.
+This example creates a 1 NOK Strex payment transaction that the end user will confirm by replying "OK" to an SMS from Strex.
+You can use message_prefix and message_suffix custom properties to influence the start and end of the SMS sent by Strex.
 ```C#
 var transaction = new StrexTransaction
 {
