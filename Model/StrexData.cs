@@ -57,6 +57,12 @@ namespace Target365.Sdk
 		public decimal Price { get; set; }
 
 		/// <summary>
+		/// Timeout in minutes for transactions which trigger end user registration. Default value is 5.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public int Timeout { get; set; } = 5;
+
+		/// <summary>
 		/// Read-only: Whether billing was performed. Null if status is unknown.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
