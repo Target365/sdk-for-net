@@ -14,7 +14,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="request">HttpRequestMessage object.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		Task VerifyRequestSignatureAsync(HttpRequestMessage request, CancellationToken cancellationToken = default(CancellationToken));
+		Task VerifyRequestSignatureAsync(HttpRequestMessage request, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Verifies an incoming http request from Target365 like an in-message or delivery report forward.
@@ -24,6 +24,6 @@ namespace Target365.Sdk
 		/// <param name="contentBytes">Raw http content.</param>
 		/// <param name="signatureString">Signature string from HTTP header 'X-ECDSA-Signature'.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		Task VerifyRequestSignatureAsync(string method, string uri, byte[] contentBytes, string signatureString, CancellationToken cancellationToken = default(CancellationToken));
+		Task VerifyRequestSignatureAsync(string method, string uri, byte[] contentBytes, string signatureString, CancellationToken cancellationToken = default);
 	}
 }

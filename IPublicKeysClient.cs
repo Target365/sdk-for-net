@@ -13,19 +13,19 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="keyName">Key name.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		Task<PublicKey> GetServerPublicKeyAsync(string keyName, CancellationToken cancellationToken = default(CancellationToken));
+		Task<PublicKey> GetServerPublicKeyAsync(string keyName, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Gets all client public keys.
 		/// </summary>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		Task<PublicKey[]> GetClientPublicKeysAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task<PublicKey[]> GetClientPublicKeysAsync(CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Gets a client public key.
 		/// </summary>
 		/// <param name="keyName">Key name.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		Task<PublicKey> GetClientPublicKeyAsync(string keyName, CancellationToken cancellationToken = default(CancellationToken));
+		Task<PublicKey> GetClientPublicKeyAsync(string keyName, CancellationToken cancellationToken = default);
 	}
 }

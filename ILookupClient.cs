@@ -13,6 +13,6 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="msisdn">Mobile phone number. Format is full international msisdn including a leading plus, ex: '+4798079008'.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		Task<Lookup> LookupAsync(string msisdn, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Lookup> LookupAsync(string msisdn, CancellationToken cancellationToken = default);
 	}
 }

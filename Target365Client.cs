@@ -115,7 +115,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="baseUrl">Base url - provided by Target365.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public static async Task<string> PingAsync(Uri baseUrl, CancellationToken cancellationToken = default(CancellationToken))
+		public static async Task<string> PingAsync(Uri baseUrl, CancellationToken cancellationToken = default)
 		{
 			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(baseUrl, "api/ping"));
 
@@ -132,7 +132,7 @@ namespace Target365.Sdk
 		/// Pings the service and returns a hello message.
 		/// </summary>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<string> PingAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<string> PingAsync(CancellationToken cancellationToken = default)
 		{
 			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, "api/ping"));
 			
@@ -150,7 +150,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="msisdn">Mobile phone number.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<Lookup> LookupAsync(string msisdn, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Lookup> LookupAsync(string msisdn, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(msisdn)) throw new ArgumentException("msisdn cannot be null or empty string.");
 
@@ -174,7 +174,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="keyword">Keyword object.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<string> CreateKeywordAsync(Keyword keyword, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<string> CreateKeywordAsync(Keyword keyword, CancellationToken cancellationToken = default)
 		{
 			if (keyword == null) throw new ArgumentNullException(nameof(keyword));
 
@@ -203,7 +203,7 @@ namespace Target365.Sdk
 		/// <param name="mode">Filter for mode (exact string match).</param>
 		/// <param name="tag">Filter for tag (exact string match).</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<Keyword[]> GetAllKeywordsAsync(string shortNumberId = null, string keywordText = null, string mode = null, string tag = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Keyword[]> GetAllKeywordsAsync(string shortNumberId = null, string keywordText = null, string mode = null, string tag = null, CancellationToken cancellationToken = default)
 		{
 			var uri = "api/keywords";
 			var queryParams = new Dictionary<string, string>
@@ -234,7 +234,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="keywordId">Keyword id.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<Keyword> GetKeywordAsync(string keywordId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Keyword> GetKeywordAsync(string keywordId, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(keywordId)) throw new ArgumentException("keywordId cannot be null or empty string.");
 
@@ -258,7 +258,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="keyword">Updated keyword.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task UpdateKeywordAsync(Keyword keyword, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task UpdateKeywordAsync(Keyword keyword, CancellationToken cancellationToken = default)
 		{
 			if (keyword == null) throw new ArgumentNullException(nameof(keyword));
 			if (keyword.KeywordId == null) throw new ArgumentNullException(nameof(keyword.KeywordId));
@@ -283,7 +283,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="keywordId">Keyword id.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task DeleteKeywordAsync(string keywordId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task DeleteKeywordAsync(string keywordId, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(keywordId)) throw new ArgumentException($"{nameof(keywordId)} cannot be null or empty string.");
 
@@ -329,7 +329,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="message">Out-message object.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<string> CreateOutMessageAsync(OutMessage message, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<string> CreateOutMessageAsync(OutMessage message, CancellationToken cancellationToken = default)
 		{
 			if (message == null) throw new ArgumentNullException(nameof(message));
 
@@ -355,7 +355,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="messages">Out-messages array.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task CreateOutMessageBatchAsync(OutMessage[] messages, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task CreateOutMessageBatchAsync(OutMessage[] messages, CancellationToken cancellationToken = default)
 		{
 			if (messages == null) throw new ArgumentNullException(nameof(messages));
 
@@ -379,7 +379,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="transactionId">Transaction id.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<OutMessage> GetOutMessageAsync(string transactionId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<OutMessage> GetOutMessageAsync(string transactionId, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(transactionId)) throw new ArgumentException("transactionId cannot be null or empty string.");
 
@@ -403,7 +403,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="message">Updated message.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task UpdateOutMessageAsync(OutMessage message, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task UpdateOutMessageAsync(OutMessage message, CancellationToken cancellationToken = default)
 		{
 			if (message == null) throw new ArgumentNullException(nameof(message));
 			if (message.TransactionId == null) throw new ArgumentNullException(nameof(message.TransactionId));
@@ -428,7 +428,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="transactionId">Transaction id.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task DeleteOutMessageAsync(string transactionId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task DeleteOutMessageAsync(string transactionId, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(transactionId)) throw new ArgumentException("transactionId cannot be null or empty string.");
 
@@ -447,7 +447,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="msisdns">Msisdns to prepare.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task PrepareMsisdnsAsync(string[] msisdns, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task PrepareMsisdnsAsync(string[] msisdns, CancellationToken cancellationToken = default)
 		{
 			if (msisdns == null || msisdns.Length == 0) throw new ArgumentException(nameof(msisdns) + " cannot be null or empty.");
 
@@ -470,7 +470,7 @@ namespace Target365.Sdk
 		/// Gets all merchant ids.
 		/// </summary>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<StrexMerchant[]> GetMerchantIdsAsync(CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<StrexMerchant[]> GetMerchantIdsAsync(CancellationToken cancellationToken = default)
 		{
 			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, "api/strex/merchants"));
 			await SignRequest(request).ConfigureAwait(false);
@@ -489,7 +489,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="merchantId">merchant id.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<StrexMerchant> GetMerchantAsync(string merchantId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<StrexMerchant> GetMerchantAsync(string merchantId, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(merchantId)) throw new ArgumentException($"{nameof(merchantId)} cannot be null or empty string.");
 
@@ -513,7 +513,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="merchant">merchant object.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task SaveMerchantAsync(StrexMerchant merchant, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task SaveMerchantAsync(StrexMerchant merchant, CancellationToken cancellationToken = default)
 		{
 			if (merchant == null) throw new ArgumentNullException(nameof(merchant));
 			if (merchant.MerchantId == null) throw new ArgumentNullException(nameof(merchant.MerchantId));
@@ -538,7 +538,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="merchantId">Merchant id.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task DeleteMerchantAsync(string merchantId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task DeleteMerchantAsync(string merchantId, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(merchantId)) throw new ArgumentException($"{nameof(merchantId)} cannot be null or empty string.");
 
@@ -581,7 +581,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="transactionId">Strex transaction id.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<OneTimePassword> GetOneTimePasswordAsync(string transactionId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<OneTimePassword> GetOneTimePasswordAsync(string transactionId, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(transactionId)) throw new ArgumentException("transactionId cannot be null or empty string.");
 
@@ -631,7 +631,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="transactionId">Strex transaction id.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<StrexTransaction> GetStrexTransactionAsync(string transactionId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<StrexTransaction> GetStrexTransactionAsync(string transactionId, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(transactionId)) throw new ArgumentException("transactionId cannot be null or empty string.");
 
@@ -655,7 +655,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="transactionId">Strex transaction id.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<string> ReverseStrexTransactionAsync(string transactionId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<string> ReverseStrexTransactionAsync(string transactionId, CancellationToken cancellationToken = default)
 		{
 			if (transactionId == null) throw new ArgumentException($"{nameof(transactionId)} cannot be null.");
 
@@ -678,7 +678,7 @@ namespace Target365.Sdk
 		/// </summary>
 		/// <param name="keyName">Key name.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<PublicKey> GetServerPublicKeyAsync(string keyName, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<PublicKey> GetServerPublicKeyAsync(string keyName, CancellationToken cancellationToken = default)
 		{
 			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/server/public-keys/{WebUtility.UrlEncode(keyName)}"));
 			await SignRequest(request);
@@ -746,7 +746,7 @@ namespace Target365.Sdk
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <exception cref="UnauthorizedAccessException">Thrown if the request couldn't be verified.</exception>
 		/// <exception cref="ArgumentNullException">Public key couldn't be found.</exception>
-		public async Task VerifyRequestSignatureAsync(HttpRequestMessage request, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task VerifyRequestSignatureAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
 		{
 			var method = request.Method.ToString().ToLowerInvariant();
 			var uri = request.RequestUri.AbsoluteUri.ToLowerInvariant();
@@ -766,7 +766,7 @@ namespace Target365.Sdk
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <exception cref="UnauthorizedAccessException">Thrown if the request couldn't be verified.</exception>
 		/// <exception cref="ArgumentNullException">Public key couldn't be found.</exception>
-		public async Task VerifyRequestSignatureAsync(string method, string uri, byte[] contentBytes, string signatureString, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task VerifyRequestSignatureAsync(string method, string uri, byte[] contentBytes, string signatureString, CancellationToken cancellationToken = default)
 		{
 			if (signatureString == null)
 				throw new UnauthorizedAccessException("No signature parameter.");

@@ -14,6 +14,6 @@ namespace Target365.Sdk
 		/// <param name="shortNumberId">Short number id.</param>
 		/// <param name="transactionId">Transaction id.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		Task<InMessage> GetInMessageAsync(string shortNumberId, string transactionId, CancellationToken cancellationToken = default(CancellationToken));
+		Task<InMessage> GetInMessageAsync(string shortNumberId, string transactionId, CancellationToken cancellationToken = default);
 	}
 }
