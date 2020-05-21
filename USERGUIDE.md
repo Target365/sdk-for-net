@@ -14,7 +14,8 @@
     * [Create a Strex payment transaction](#create-a-strex-payment-transaction)
     * [Create a Strex payment transaction with one-time password](#create-a-strex-payment-transaction-with-one-time-password)
     * [Reverse a Strex payment transaction](#reverse-a-strex-payment-transaction)
-* [One-click transactions](#one-click-transactions)
+* [One-click](#one-click)
+    * [One-click config](#one-click-config)
     * [One-time transaction](#one-time-transaction)
     * [Setup subscription transaction](#setup-subscription-transaction)
     * [Recurring transaction](#recurring-transaction)
@@ -161,8 +162,6 @@ var transaction = new StrexTransaction
     Price = 1,
     ServiceCode = ServiceCodes.NonCommercialDonation,
     InvoiceText = "Donation test",
-    MessagePrefix = "Dear customer...",
-    MessageSuffix = "Best Regards..."
     SmsConfirmation = true,
 };
 
@@ -212,10 +211,28 @@ This example reverses a previously billed Strex payment transaction. The origina
 var reversalTransactionId = await serviceClient.ReverseStrexTransactionAsync(transactionId);
 ```
 
-## One-click transactions
+## One-click
+
+### One-click config
+This example sets up a one-click config which makes it easier to handle campaigns in one-click where most properties like merchantId, price et cetera are known in advance. You can redirect the end-user to the one-click campaign page by redirecting to http://betal.strex.no/{YOUR-CONFIG-ID} for PROD and http://test-strex.target365.io/{YOUR-CONFIG-ID} for TEST-environment. You can also set the TransactionId by adding ?id={YOUR-TRANSACTION-ID} to the URL.
+
+```C#
+var config = new OneClickConfig
+{
+    ConfigId = "Test1",
+    ShortNumber = "2002",
+    Price = 99,
+    MerchantId = "YOUR_MERCHANT_ID",
+    ServiceCode = ServiceCodes.NonCommercialDonation,
+    InvoiceText = "Donation test",
+    RedirectUrl = "https://your-return-url.com?id=" + transactionId,
+};
+
+await serviceClient.SaveOneClickConfigAsync(config);
+```
 
 ### One-time transaction
-This example sets up a simple one-time transaction for one-click. After creation you can redirect the end-user to the one-click landing page by redirecting to http://betal.strex.no/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for PROD and http://test-strex.target365.io/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for TEST-environment.
+This example sets up a simple one-time transaction for one-click without the use of config. After creation you can redirect the end-user to the one-click landing page by redirecting to http://betal.strex.no/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for PROD and http://test-strex.target365.io/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for TEST-environment.
 
 If the MSISDN can't be determined automatically on the landing page the end user will have to enter the MSISDN and will receice an SMS with a pin-code that must be entered. Entering the pin-code can be attempted only 3 times before the transaction is abandoned and the end user is redirected back to the redirectUrl.
 
