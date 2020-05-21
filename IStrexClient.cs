@@ -70,6 +70,18 @@ namespace Target365.Sdk
 		/// <param name="cancellationToken">Cancellation token.</param>
 		Task<string> ReverseStrexTransactionAsync(string transactionId, CancellationToken cancellationToken = default);
 
+		/// <summary>
+		/// Gets a one-click config.
+		/// </summary>
+		/// <param name="configId">Config id.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		Task<OneClickConfig> GetOneClickConfigAsync(string configId, CancellationToken cancellationToken = default);
 
+		/// <summary>
+		/// Creates/updates a one-click config.
+		/// </summary>
+		/// <param name="config">One-click config object.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		Task SaveOneClickConfigAsync(OneClickConfig config, CancellationToken cancellationToken = default);
 	}
 }

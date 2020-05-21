@@ -117,15 +117,13 @@ namespace Target365.Sdk
 		/// <param name="cancellationToken">Cancellation token.</param>
 		public static async Task<string> PingAsync(Uri baseUrl, CancellationToken cancellationToken = default)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(baseUrl, "api/ping"));
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(baseUrl, "api/ping"));
+			using var response = await _staticHttpClient.Value.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _staticHttpClient.Value.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
-			}
+			return JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
 		}
 
 		/// <summary>
@@ -134,15 +132,13 @@ namespace Target365.Sdk
 		/// <param name="cancellationToken">Cancellation token.</param>
 		public async Task<string> PingAsync(CancellationToken cancellationToken = default)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, "api/ping"));
-			
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, "api/ping"));
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-				return JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
-			}
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+
+			return JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
 		}
 
 		/// <summary>
@@ -154,19 +150,17 @@ namespace Target365.Sdk
 		{
 			if (string.IsNullOrEmpty(msisdn)) throw new ArgumentException("msisdn cannot be null or empty string.");
 
-			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/lookup?msisdn={WebUtility.UrlEncode(msisdn)}"));
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/lookup?msisdn={WebUtility.UrlEncode(msisdn)}"));
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (response.StatusCode == HttpStatusCode.NotFound)
-					return null;
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return null;
 
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return JsonConvert.DeserializeObject<Lookup>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
-			}
+			return JsonConvert.DeserializeObject<Lookup>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
 		}
 
 		/// <summary>
@@ -179,20 +173,18 @@ namespace Target365.Sdk
 			if (keyword == null) throw new ArgumentNullException(nameof(keyword));
 
 			var content = new StringContent(JsonConvert.SerializeObject(keyword, _jsonSerializerSettings), Encoding.UTF8, "application/json");
-			var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/keywords"))
+			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/keywords"))
 			{
 				Content = content
 			};
 
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return response.Headers.Location.AbsoluteUri.Split('/').Last();
-			}
+			return response.Headers.Location.AbsoluteUri.Split('/').Last();
 		}
 
 		/// <summary>
@@ -217,16 +209,14 @@ namespace Target365.Sdk
 			if (queryParams.Any())
 				uri = string.Join("?", uri, string.Join("&", queryParams.Select(x => $"{x.Key}={WebUtility.UrlEncode(x.Value)}")));
 
-			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, uri));
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, uri));
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return JsonConvert.DeserializeObject<Keyword[]>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
-			}
+			return JsonConvert.DeserializeObject<Keyword[]>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
 		}
 
 		/// <summary>
@@ -238,19 +228,17 @@ namespace Target365.Sdk
 		{
 			if (string.IsNullOrEmpty(keywordId)) throw new ArgumentException("keywordId cannot be null or empty string.");
 
-			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/keywords/{keywordId}"));
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/keywords/{keywordId}"));
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (response.StatusCode == HttpStatusCode.NotFound)
-					return null;
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return null;
 
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return JsonConvert.DeserializeObject<Keyword>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
-			}
+			return JsonConvert.DeserializeObject<Keyword>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
 		}
 
 		/// <summary>
@@ -264,18 +252,16 @@ namespace Target365.Sdk
 			if (keyword.KeywordId == null) throw new ArgumentNullException(nameof(keyword.KeywordId));
 
 			var content = new StringContent(JsonConvert.SerializeObject(keyword, _jsonSerializerSettings), Encoding.UTF8, "application/json");
-			var request = new HttpRequestMessage(HttpMethod.Put, new Uri(_httpClient.BaseAddress, $"api/keywords/{keyword.KeywordId}"))
+			using var request = new HttpRequestMessage(HttpMethod.Put, new Uri(_httpClient.BaseAddress, $"api/keywords/{keyword.KeywordId}"))
 			{
 				Content = content
 			};
 
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
-			}
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -287,14 +273,12 @@ namespace Target365.Sdk
 		{
 			if (string.IsNullOrEmpty(keywordId)) throw new ArgumentException($"{nameof(keywordId)} cannot be null or empty string.");
 
-			var request = new HttpRequestMessage(HttpMethod.Delete, new Uri(_httpClient.BaseAddress, $"api/keywords/{keywordId}"));
+			using var request = new HttpRequestMessage(HttpMethod.Delete, new Uri(_httpClient.BaseAddress, $"api/keywords/{keywordId}"));
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
-			}
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -309,19 +293,17 @@ namespace Target365.Sdk
 			if (string.IsNullOrEmpty(transactionId)) throw new ArgumentException("transactionId cannot be null or empty string.");
 
 			var requestUri = new Uri(_httpClient.BaseAddress, $"api/in-messages/{shortNumberId}/{WebUtility.UrlEncode(transactionId)}");
-			var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+			using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (response.StatusCode == HttpStatusCode.NotFound)
-					return null;
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return null;
 
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return JsonConvert.DeserializeObject<InMessage>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
-			}
+			return JsonConvert.DeserializeObject<InMessage>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
 		}
 
 		/// <summary>
@@ -334,20 +316,18 @@ namespace Target365.Sdk
 			if (message == null) throw new ArgumentNullException(nameof(message));
 
 			var content = new StringContent(JsonConvert.SerializeObject(message, _jsonSerializerSettings), Encoding.UTF8, "application/json");
-			var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/out-messages"))
+			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/out-messages"))
 			{
 				Content = content
 			};
 
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return response.Headers.Location.AbsoluteUri.Split('/').Last();
-			}
+			return response.Headers.Location.AbsoluteUri.Split('/').Last();
 		}
 
 		/// <summary>
@@ -360,18 +340,16 @@ namespace Target365.Sdk
 			if (messages == null) throw new ArgumentNullException(nameof(messages));
 
 			var content = new StringContent(JsonConvert.SerializeObject(messages, _jsonSerializerSettings), Encoding.UTF8, "application/json");
-			var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/out-messages/batch"))
+			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/out-messages/batch"))
 			{
 				Content = content
 			};
 
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
-			}
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -383,19 +361,17 @@ namespace Target365.Sdk
 		{
 			if (string.IsNullOrEmpty(transactionId)) throw new ArgumentException("transactionId cannot be null or empty string.");
 
-			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/out-messages/{WebUtility.UrlEncode(transactionId)}"));
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/out-messages/{WebUtility.UrlEncode(transactionId)}"));
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (response.StatusCode == HttpStatusCode.NotFound)
-					return null;
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return null;
 
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return JsonConvert.DeserializeObject<OutMessage>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
-			}
+			return JsonConvert.DeserializeObject<OutMessage>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
 		}
 
 		/// <summary>
@@ -409,18 +385,16 @@ namespace Target365.Sdk
 			if (message.TransactionId == null) throw new ArgumentNullException(nameof(message.TransactionId));
 
 			var content = new StringContent(JsonConvert.SerializeObject(message, _jsonSerializerSettings), Encoding.UTF8, "application/json");
-			var request = new HttpRequestMessage(HttpMethod.Put, new Uri(_httpClient.BaseAddress, $"api/out-messages/{WebUtility.UrlEncode(message.TransactionId)}"))
+			using var request = new HttpRequestMessage(HttpMethod.Put, new Uri(_httpClient.BaseAddress, $"api/out-messages/{WebUtility.UrlEncode(message.TransactionId)}"))
 			{
 				Content = content
 			};
 
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
-			}
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -432,14 +406,12 @@ namespace Target365.Sdk
 		{
 			if (string.IsNullOrEmpty(transactionId)) throw new ArgumentException("transactionId cannot be null or empty string.");
 
-			var request = new HttpRequestMessage(HttpMethod.Delete, new Uri(_httpClient.BaseAddress, $"api/out-messages/{WebUtility.UrlEncode(transactionId)}"));
+			using var request = new HttpRequestMessage(HttpMethod.Delete, new Uri(_httpClient.BaseAddress, $"api/out-messages/{WebUtility.UrlEncode(transactionId)}"));
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
-			}
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -452,18 +424,16 @@ namespace Target365.Sdk
 			if (msisdns == null || msisdns.Length == 0) throw new ArgumentException(nameof(msisdns) + " cannot be null or empty.");
 
 			var content = new StringContent(JsonConvert.SerializeObject(msisdns, _jsonSerializerSettings), Encoding.UTF8, "application/json");
-			var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/prepare-msisdns"))
+			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/prepare-msisdns"))
 			{
 				Content = content
 			};
 
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
-			}
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -472,16 +442,59 @@ namespace Target365.Sdk
 		/// <param name="cancellationToken">Cancellation token.</param>
 		public async Task<StrexMerchant[]> GetMerchantIdsAsync(CancellationToken cancellationToken = default)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, "api/strex/merchants"));
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, "api/strex/merchants"));
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+
+			return JsonConvert.DeserializeObject<StrexMerchant[]>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+		}
+
+		/// <summary>
+		/// Gets a one-click config.
+		/// </summary>
+		/// <param name="configId">Config id.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		public async Task<OneClickConfig> GetOneClickConfigAsync(string configId, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrEmpty(configId)) throw new ArgumentException($"{nameof(configId)} cannot be null or empty string.");
+
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/one-click/configs/{WebUtility.UrlEncode(configId)}"));
+			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return null;
+
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+
+			return JsonConvert.DeserializeObject<OneClickConfig>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+		}
+
+		/// <summary>
+		/// Creates/updates a one-click config.
+		/// </summary>
+		/// <param name="config">one-click config object.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		public async Task SaveOneClickConfigAsync(OneClickConfig config, CancellationToken cancellationToken = default)
+		{
+			if (config == null) throw new ArgumentNullException(nameof(config));
+			if (config.MerchantId == null) throw new ArgumentNullException(nameof(config.MerchantId));
+
+			var content = new StringContent(JsonConvert.SerializeObject(config, _jsonSerializerSettings), Encoding.UTF8, "application/json");
+			using var request = new HttpRequestMessage(HttpMethod.Put, new Uri(_httpClient.BaseAddress, $"api/one-click/configs/{WebUtility.UrlEncode(config.ConfigId)}"))
 			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+				Content = content
+			};
 
-				return JsonConvert.DeserializeObject<StrexMerchant[]>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
-			}
+			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -493,19 +506,16 @@ namespace Target365.Sdk
 		{
 			if (string.IsNullOrEmpty(merchantId)) throw new ArgumentException($"{nameof(merchantId)} cannot be null or empty string.");
 
-			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/merchants/{WebUtility.UrlEncode(merchantId)}"));
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/merchants/{WebUtility.UrlEncode(merchantId)}"));
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return null;
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (response.StatusCode == HttpStatusCode.NotFound)
-					return null;
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
-
-				return JsonConvert.DeserializeObject<StrexMerchant>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
-			}
+			return JsonConvert.DeserializeObject<StrexMerchant>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
 		}
 
 		/// <summary>
@@ -519,18 +529,15 @@ namespace Target365.Sdk
 			if (merchant.MerchantId == null) throw new ArgumentNullException(nameof(merchant.MerchantId));
 
 			var content = new StringContent(JsonConvert.SerializeObject(merchant, _jsonSerializerSettings), Encoding.UTF8, "application/json");
-			var request = new HttpRequestMessage(HttpMethod.Put, new Uri(_httpClient.BaseAddress, $"api/strex/merchants/{WebUtility.UrlEncode(merchant.MerchantId)}"))
+			using var request = new HttpRequestMessage(HttpMethod.Put, new Uri(_httpClient.BaseAddress, $"api/strex/merchants/{WebUtility.UrlEncode(merchant.MerchantId)}"))
 			{
 				Content = content
 			};
 
 			await SignRequest(request).ConfigureAwait(false);
-
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
-			}
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -542,14 +549,12 @@ namespace Target365.Sdk
 		{
 			if (string.IsNullOrEmpty(merchantId)) throw new ArgumentException($"{nameof(merchantId)} cannot be null or empty string.");
 
-			var request = new HttpRequestMessage(HttpMethod.Delete, new Uri(_httpClient.BaseAddress, $"api/strex/merchants/{WebUtility.UrlEncode(merchantId)}"));
+			using var request = new HttpRequestMessage(HttpMethod.Delete, new Uri(_httpClient.BaseAddress, $"api/strex/merchants/{WebUtility.UrlEncode(merchantId)}"));
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
-			}
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -562,18 +567,16 @@ namespace Target365.Sdk
 			if (oneTimePassword == null) throw new ArgumentException($"{nameof(oneTimePassword)} cannot be null.");
 
 			var content = new StringContent(JsonConvert.SerializeObject(oneTimePassword, _jsonSerializerSettings), Encoding.UTF8, "application/json");
-			var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/strex/one-time-passwords"))
+			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/strex/one-time-passwords"))
 			{
 				Content = content
 			};
 
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
-			}
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -585,19 +588,17 @@ namespace Target365.Sdk
 		{
 			if (string.IsNullOrEmpty(transactionId)) throw new ArgumentException("transactionId cannot be null or empty string.");
 
-			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/one-time-passwords/{transactionId}"));
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/one-time-passwords/{transactionId}"));
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (response.StatusCode == HttpStatusCode.NotFound)
-					return null;
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return null;
 
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return JsonConvert.DeserializeObject<OneTimePassword>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
-			}
+			return JsonConvert.DeserializeObject<OneTimePassword>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
 		}
 
 		/// <summary>
@@ -610,20 +611,18 @@ namespace Target365.Sdk
 			if (transaction == null) throw new ArgumentException($"{nameof(transaction)} cannot be null.");
 
 			var content = new StringContent(JsonConvert.SerializeObject(transaction, _jsonSerializerSettings), Encoding.UTF8, "application/json");
-			var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/strex/transactions"))
+			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/strex/transactions"))
 			{
 				Content = content
 			};
 
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return response.Headers.Location.AbsoluteUri.Split('/').Last();
-			}
+			return response.Headers.Location.AbsoluteUri.Split('/').Last();
 		}
 
 		/// <summary>
@@ -635,19 +634,17 @@ namespace Target365.Sdk
 		{
 			if (string.IsNullOrEmpty(transactionId)) throw new ArgumentException("transactionId cannot be null or empty string.");
 
-			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/transactions/{transactionId}"));
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/transactions/{transactionId}"));
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (response.StatusCode == HttpStatusCode.NotFound)
-					return null;
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return null;
 
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return JsonConvert.DeserializeObject<StrexTransaction>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
-			}
+			return JsonConvert.DeserializeObject<StrexTransaction>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
 		}
 
 		/// <summary>
@@ -660,17 +657,14 @@ namespace Target365.Sdk
 			if (transactionId == null) throw new ArgumentException($"{nameof(transactionId)} cannot be null.");
 
 			var requestUrl = new Uri(_httpClient.BaseAddress, $"api/strex/transactions/{WebUtility.UrlEncode(transactionId)}");
-			var request = new HttpRequestMessage(HttpMethod.Delete, requestUrl);
-
+			using var request = new HttpRequestMessage(HttpMethod.Delete, requestUrl);
 			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return response.Headers.Location.AbsoluteUri.Split('/').Last();
-			}
+			return response.Headers.Location.AbsoluteUri.Split('/').Last();
 		}
 
 		/// <summary>
@@ -680,19 +674,17 @@ namespace Target365.Sdk
 		/// <param name="cancellationToken">Cancellation token.</param>
 		public async Task<PublicKey> GetServerPublicKeyAsync(string keyName, CancellationToken cancellationToken = default)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/server/public-keys/{WebUtility.UrlEncode(keyName)}"));
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/server/public-keys/{WebUtility.UrlEncode(keyName)}"));
 			await SignRequest(request);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (response.StatusCode == HttpStatusCode.NotFound)
-					return null;
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return null;
 
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return JsonConvert.DeserializeObject<PublicKey>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
-			}
+			return JsonConvert.DeserializeObject<PublicKey>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
 		}
 
 		/// <summary>
@@ -701,19 +693,17 @@ namespace Target365.Sdk
 		/// <param name="cancellationToken">Cancellation token.</param>
 		public async Task<PublicKey[]> GetClientPublicKeysAsync(CancellationToken cancellationToken = default)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, "api/client/public-keys"));
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, "api/client/public-keys"));
 			await SignRequest(request);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (response.StatusCode == HttpStatusCode.NotFound)
-					return null;
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return null;
 
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return JsonConvert.DeserializeObject<PublicKey[]>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
-			}
+			return JsonConvert.DeserializeObject<PublicKey[]>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
 		}
 
 		/// <summary>
@@ -723,19 +713,17 @@ namespace Target365.Sdk
 		/// <param name="cancellationToken">Cancellation token.</param>
 		public async Task<PublicKey> GetClientPublicKeyAsync(string keyName, CancellationToken cancellationToken = default)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/client/public-keys/{WebUtility.UrlEncode(keyName)}"));
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/client/public-keys/{WebUtility.UrlEncode(keyName)}"));
 			await SignRequest(request);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
-			{
-				if (response.StatusCode == HttpStatusCode.NotFound)
-					return null;
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return null;
 
-				if (!response.IsSuccessStatusCode)
-					await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-				return JsonConvert.DeserializeObject<PublicKey>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
-			}
+			return JsonConvert.DeserializeObject<PublicKey>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
 		}
 
 		/// <summary>
@@ -792,10 +780,8 @@ namespace Target365.Sdk
 
 			if (contentBytes != null && contentBytes.Length > 0)
 			{
-				using (var sha256 = SHA256.Create())
-				{
-					contentHash = Convert.ToBase64String(sha256.ComputeHash(contentBytes));
-				}
+				using var sha256 = SHA256.Create();
+				contentHash = Convert.ToBase64String(sha256.ComputeHash(contentBytes));
 			}
 
 			if (!_publicKeys.TryGetValue(keyName, out var publicKey))
@@ -808,16 +794,14 @@ namespace Target365.Sdk
 			var signatureBytes = Convert.FromBase64String(signature);
 			var cngEcPublicBlob = DerAns1ToCngEcPublicBlob(Convert.FromBase64String(publicKey.PublicKeyString));
 
-			using (var ecdsa = new ECDsaCng(CngKey.Import(cngEcPublicBlob, CngKeyBlobFormat.EccPublicBlob)))
-			{
+			using var ecdsa = new ECDsaCng(CngKey.Import(cngEcPublicBlob, CngKeyBlobFormat.EccPublicBlob));
 #if NET46
-				if (!ecdsa.VerifyData(Encoding.UTF8.GetBytes(message), signatureBytes))
-					throw new UnauthorizedAccessException("Incorrect signature parameter in request.");
+			if (!ecdsa.VerifyData(Encoding.UTF8.GetBytes(message), signatureBytes))
+				throw new UnauthorizedAccessException("Incorrect signature parameter in request.");
 #else
 				if (!ecdsa.VerifyData(Encoding.UTF8.GetBytes(message), signatureBytes, HashAlgorithmName.SHA256))
 					throw new UnauthorizedAccessException("Incorrect signature parameter in request.");
 #endif
-			}
 		}
 
 		/// <summary>
@@ -858,36 +842,30 @@ namespace Target365.Sdk
 
 			if (request.Content != null)
 			{
-				using (var sha256 = SHA256.Create())
-				{
-					var contentBytes = await request.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+				using var sha256 = SHA256.Create();
+				var contentBytes = await request.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 
-					if (contentBytes?.Length > 0)
-						contentHash = Convert.ToBase64String(sha256.ComputeHash(contentBytes));
-				}
+				if (contentBytes?.Length > 0)
+					contentHash = Convert.ToBase64String(sha256.ComputeHash(contentBytes));
 			}
 
 			var message = $"{method}{uri}{timestamp}{nonce}{contentHash}";
 
 			if (_cngPublicKey.KeySize >= 1024)
 			{
-				using (var rsa = new RSACng(_cngPublicKey))
-				{
-					var signatureString = Convert.ToBase64String(rsa.SignData(Encoding.UTF8.GetBytes(message), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
-					request.Headers.Authorization = new AuthenticationHeaderValue("HMAC", $"{keyName}:{timestamp}:{nonce}:{signatureString}");
-				}
+				using var rsa = new RSACng(_cngPublicKey);
+				var signatureString = Convert.ToBase64String(rsa.SignData(Encoding.UTF8.GetBytes(message), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
+				request.Headers.Authorization = new AuthenticationHeaderValue("HMAC", $"{keyName}:{timestamp}:{nonce}:{signatureString}");
 			}
 			else
 			{
-				using (var ecdsa = new ECDsaCng(_cngPublicKey))
-				{
+				using var ecdsa = new ECDsaCng(_cngPublicKey);
 #if NET46
-					var signatureString = Convert.ToBase64String(ecdsa.SignData(Encoding.UTF8.GetBytes(message)));
+				var signatureString = Convert.ToBase64String(ecdsa.SignData(Encoding.UTF8.GetBytes(message)));
 #else
 					var signatureString = Convert.ToBase64String(ecdsa.SignData(Encoding.UTF8.GetBytes(message), HashAlgorithmName.SHA256));
 #endif
-					request.Headers.Authorization = new AuthenticationHeaderValue("HMAC", $"{keyName}:{timestamp}:{nonce}:{signatureString}");
-				}
+				request.Headers.Authorization = new AuthenticationHeaderValue("HMAC", $"{keyName}:{timestamp}:{nonce}:{signatureString}");
 			}
 		}
 
