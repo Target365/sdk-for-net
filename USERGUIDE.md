@@ -225,7 +225,7 @@ var config = new OneClickConfig
     MerchantId = "YOUR_MERCHANT_ID",
     ServiceCode = ServiceCodes.NonCommercialDonation,
     InvoiceText = "Donation test",
-    RedirectUrl = "https://your-return-url.com?id=" + transactionId,
+    RedirectUrl = "https://your-return-url.com?id={TransactionId}", // {TransactionId} is replaced by actual transaction id
 };
 
 await serviceClient.SaveOneClickConfigAsync(config);
