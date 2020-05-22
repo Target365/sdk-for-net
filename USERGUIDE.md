@@ -224,6 +224,8 @@ var config = new OneClickConfig
     Price = 99,
     MerchantId = "YOUR_MERCHANT_ID",
     ServiceCode = ServiceCodes.NonCommercialDonation,
+    OnlineText = "Buy directly",
+    OfflineText = "Buy with PIN-code",
     InvoiceText = "Donation test",
     RedirectUrl = "https://your-return-url.com?id={TransactionId}", // {TransactionId} is replaced by actual transaction id
 };
