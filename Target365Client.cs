@@ -677,7 +677,7 @@ namespace Target365.Sdk
 		{
 			if (string.IsNullOrEmpty(recipient)) throw new ArgumentException("recipient cannot be null or empty string.");
 
-			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/valididty?recipientId={WebUtility.UrlEncode(recipient)}"
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/validity?recipient={WebUtility.UrlEncode(recipient)}"
 				+ (string.IsNullOrEmpty(merchantId) ? "" : $"&merchantId={merchantId}")));
 
 			await SignRequest(request).ConfigureAwait(false);
