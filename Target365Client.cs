@@ -683,9 +683,6 @@ namespace Target365.Sdk
 			await SignRequest(request).ConfigureAwait(false);
 			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-			if (response.StatusCode == HttpStatusCode.NotFound)
-				return null;
-
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
