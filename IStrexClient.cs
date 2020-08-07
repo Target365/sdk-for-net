@@ -71,6 +71,14 @@ namespace Target365.Sdk
 		Task<string> ReverseStrexTransactionAsync(string transactionId, CancellationToken cancellationToken = default);
 
 		/// <summary>
+		/// Gets Strex user validity.
+		/// </summary>
+		/// <param name="recipient">Recipient msisdn.</param>
+		/// <param name="merchantId">MerchantId (optional).</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		Task<StrexUserValidity> GetStrexValidityAsync(string recipient, string merchantId, CancellationToken cancellationToken = default);
+
+		/// <summary>
 		/// Gets a one-click config.
 		/// </summary>
 		/// <param name="configId">Config id.</param>

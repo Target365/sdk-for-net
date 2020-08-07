@@ -668,6 +668,31 @@ namespace Target365.Sdk
 		}
 
 		/// <summary>
+		/// Gets Strex user validity.
+		/// </summary>
+		/// <param name="recipient">Recipient msisdn.</param>
+		/// <param name="merchantId">MerchantId (optional).</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		public async Task<StrexUserValidity> GetStrexValidityAsync(string recipient, string merchantId, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrEmpty(recipient)) throw new ArgumentException("recipient cannot be null or empty string.");
+
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/valididty?recipientId={WebUtility.UrlEncode(recipient)}"
+				+ (string.IsNullOrEmpty(merchantId) ? "" : $"&merchantId={merchantId}")));
+
+			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return null;
+
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+
+			return JsonConvert.DeserializeObject<StrexUserValidity>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+		}
+
+		/// <summary>
 		/// Gets server public key used for signing outgoing http requests like delivery reports and in-messages.
 		/// </summary>
 		/// <param name="keyName">Key name.</param>
