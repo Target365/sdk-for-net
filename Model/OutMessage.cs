@@ -126,9 +126,9 @@ namespace Target365.Sdk
 
 		/// <summary>
 		/// Whether Unicode message is allowed.
-		/// True forces unicode SMS if Content is unicode.
-		/// False forces message to fail if Content is unicode.
-		/// Null auto-converts all unicode characters to ? and sends regular SMS.
+		/// True sends unicode SMS if Content has unicode characters.
+		/// False forces message to be rejected if Content has unicode characters.
+		/// Default is True.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public bool? AllowUnicode { get; set; }

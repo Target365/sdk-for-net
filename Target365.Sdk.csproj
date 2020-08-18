@@ -10,7 +10,7 @@
   <PropertyGroup>
     <TargetFrameworks>net46;net461;net462;net47;net471;net472;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.4.5</Version>
+    <Version>1.4.7</Version>
     <Authors>Target365</Authors>
     <Company>Target365</Company>
     <Product>Target365 SDK</Product>
@@ -27,17 +27,27 @@
     <RepositoryUrl>https://github.com/Target365/sdk-for-net</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>target365_nuget_logo.png</PackageIcon>
-    <AssemblyVersion>1.4.5.0</AssemblyVersion>
-    <FileVersion>1.4.5.0</FileVersion>
+    <AssemblyVersion>1.4.7.0</AssemblyVersion>
+    <FileVersion>1.4.7.0</FileVersion>
   </PropertyGroup>
 
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Target365.Sdk.xml</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|AnyCPU'">
+    <DocumentationFile>bin\Release\net46\Target365.Sdk.xml</DocumentationFile>
     <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|AnyCPU'">
+    <DocumentationFile>bin\Debug\net46\Target365.Sdk.xml</DocumentationFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
