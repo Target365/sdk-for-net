@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Target365.Sdk
@@ -49,5 +51,13 @@ namespace Target365.Sdk
 		/// <param name="msisdns">Msisdns to prepare.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		Task PrepareMsisdnsAsync(string[] msisdns, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Get out-message export stream in CSV format.
+		/// </summary>
+		/// <param name="from">From time.</param>
+		/// <param name="to">To time.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		Task<Stream> GetOutMessageExportAsync(DateTimeOffset from, DateTimeOffset to, CancellationToken cancellationToken = default);
 	}
 }

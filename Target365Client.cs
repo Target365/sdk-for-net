@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json.Converters;
+using System.IO;
 
 namespace Target365.Sdk
 {
@@ -434,6 +435,25 @@ namespace Target365.Sdk
 
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+		}
+
+		/// <summary>
+		/// Get out-message export in CSV format.
+		/// </summary>
+		/// <param name="from">From time.</param>
+		/// <param name="to">To time.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		public async Task<Stream> GetOutMessageExportAsync(DateTimeOffset from, DateTimeOffset to, CancellationToken cancellationToken = default)
+		{
+			var requestUrl = $"api/export/out-messages?from={WebUtility.UrlEncode(from.ToString("o"))}&to={WebUtility.UrlEncode(to.ToString("o"))}";
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, requestUrl));
+			await SignRequest(request).ConfigureAwait(false);
+			var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+
+			return await response.Content.ReadAsStreamAsync();
 		}
 
 		/// <summary>
