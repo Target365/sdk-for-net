@@ -7,6 +7,7 @@ namespace Target365.Sdk
 	/// <summary>
 	/// Strex transaction.
 	/// </summary>
+	[DataContract(Namespace = "http://schemas.target365.io/core")]
 	public class StrexTransaction : StrexData
 	{
 		/// <summary>

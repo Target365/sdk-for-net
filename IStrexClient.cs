@@ -91,5 +91,12 @@ namespace Target365.Sdk
 		/// <param name="config">One-click config object.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		Task SaveOneClickConfigAsync(OneClickConfig config, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Initiates Strex-registation by SMS.
+		/// </summary>
+		/// <param name="registrationSms">Strex registration sms.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		Task SendStrexRegistrationSmsAsync(StrexRegistrationSms registrationSms, CancellationToken cancellationToken = default);
 	}
 }
