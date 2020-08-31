@@ -518,6 +518,31 @@ namespace Target365.Sdk
 		}
 
 		/// <summary>
+		/// Sends a Strex-registration sms.
+		/// </summary>
+		/// <param name="registrationSms">Strex registration sms object.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		public async Task SendStrexRegistrationSmsAsync(StrexRegistrationSms registrationSms, CancellationToken cancellationToken = default)
+		{
+			if (registrationSms == null) throw new ArgumentNullException(nameof(registrationSms));
+			if (registrationSms.MerchantId == null) throw new ArgumentNullException(nameof(registrationSms.MerchantId));
+			if (registrationSms.TransactionId == null) throw new ArgumentNullException(nameof(registrationSms.TransactionId));
+			if (registrationSms.Recipient == null) throw new ArgumentNullException(nameof(registrationSms.Recipient));
+
+			var content = new StringContent(JsonConvert.SerializeObject(registrationSms, _jsonSerializerSettings), Encoding.UTF8, "application/json");
+			using var request = new HttpRequestMessage(HttpMethod.Put, new Uri(_httpClient.BaseAddress, "api/strex/registrationsms"))
+			{
+				Content = content
+			};
+			
+			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+		}
+
+		/// <summary>
 		/// Gets a merchant.
 		/// </summary>
 		/// <param name="merchantId">merchant id.</param>
