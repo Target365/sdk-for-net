@@ -9,16 +9,16 @@ namespace Target365.Sdk
 	public class StrexRegistrationSms
 	{
 		/// <summary>
-		/// Merchant Id.
-		/// </summary>
-		[DataMember]
-		public string MerchantId { get; set; }
-
-		/// <summary>
 		/// Transaction Id.
 		/// </summary>
 		[DataMember]
 		public string TransactionId { get; set; }
+
+		/// <summary>
+		/// Merchant Id.
+		/// </summary>
+		[DataMember]
+		public string MerchantId { get; set; }
 
 		/// <summary>
 		/// Recipient mobile number.

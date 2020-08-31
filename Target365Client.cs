@@ -124,7 +124,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<string>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -139,7 +139,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<string>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -161,7 +161,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<Lookup>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<Lookup>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -173,7 +173,7 @@ namespace Target365.Sdk
 		{
 			if (keyword == null) throw new ArgumentNullException(nameof(keyword));
 
-			var content = new StringContent(JsonConvert.SerializeObject(keyword, _jsonSerializerSettings), Encoding.UTF8, "application/json");
+			var content = new StringContent(Serialize(keyword), Encoding.UTF8, "application/json");
 			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/keywords"))
 			{
 				Content = content
@@ -217,7 +217,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<Keyword[]>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<Keyword[]>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -239,7 +239,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<Keyword>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<Keyword>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -252,7 +252,7 @@ namespace Target365.Sdk
 			if (keyword == null) throw new ArgumentNullException(nameof(keyword));
 			if (keyword.KeywordId == null) throw new ArgumentNullException(nameof(keyword.KeywordId));
 
-			var content = new StringContent(JsonConvert.SerializeObject(keyword, _jsonSerializerSettings), Encoding.UTF8, "application/json");
+			var content = new StringContent(Serialize(keyword), Encoding.UTF8, "application/json");
 			using var request = new HttpRequestMessage(HttpMethod.Put, new Uri(_httpClient.BaseAddress, $"api/keywords/{keyword.KeywordId}"))
 			{
 				Content = content
@@ -304,7 +304,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<InMessage>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<InMessage>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -316,7 +316,7 @@ namespace Target365.Sdk
 		{
 			if (message == null) throw new ArgumentNullException(nameof(message));
 
-			var content = new StringContent(JsonConvert.SerializeObject(message, _jsonSerializerSettings), Encoding.UTF8, "application/json");
+			var content = new StringContent(Serialize(message), Encoding.UTF8, "application/json");
 			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/out-messages"))
 			{
 				Content = content
@@ -340,7 +340,7 @@ namespace Target365.Sdk
 		{
 			if (messages == null) throw new ArgumentNullException(nameof(messages));
 
-			var content = new StringContent(JsonConvert.SerializeObject(messages, _jsonSerializerSettings), Encoding.UTF8, "application/json");
+			var content = new StringContent(Serialize(messages), Encoding.UTF8, "application/json");
 			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/out-messages/batch"))
 			{
 				Content = content
@@ -372,7 +372,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<OutMessage>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<OutMessage>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -385,7 +385,7 @@ namespace Target365.Sdk
 			if (message == null) throw new ArgumentNullException(nameof(message));
 			if (message.TransactionId == null) throw new ArgumentNullException(nameof(message.TransactionId));
 
-			var content = new StringContent(JsonConvert.SerializeObject(message, _jsonSerializerSettings), Encoding.UTF8, "application/json");
+			var content = new StringContent(Serialize(message), Encoding.UTF8, "application/json");
 			using var request = new HttpRequestMessage(HttpMethod.Put, new Uri(_httpClient.BaseAddress, $"api/out-messages/{WebUtility.UrlEncode(message.TransactionId)}"))
 			{
 				Content = content
@@ -424,7 +424,7 @@ namespace Target365.Sdk
 		{
 			if (msisdns == null || msisdns.Length == 0) throw new ArgumentException(nameof(msisdns) + " cannot be null or empty.");
 
-			var content = new StringContent(JsonConvert.SerializeObject(msisdns, _jsonSerializerSettings), Encoding.UTF8, "application/json");
+			var content = new StringContent(Serialize(msisdns), Encoding.UTF8, "application/json");
 			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/prepare-msisdns"))
 			{
 				Content = content
@@ -469,7 +469,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<StrexMerchant[]>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<StrexMerchant[]>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -491,7 +491,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<OneClickConfig>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<OneClickConfig>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -504,7 +504,7 @@ namespace Target365.Sdk
 			if (config == null) throw new ArgumentNullException(nameof(config));
 			if (config.MerchantId == null) throw new ArgumentNullException(nameof(config.MerchantId));
 
-			var content = new StringContent(JsonConvert.SerializeObject(config, _jsonSerializerSettings), Encoding.UTF8, "application/json");
+			var content = new StringContent(Serialize(config), Encoding.UTF8, "application/json");
 			using var request = new HttpRequestMessage(HttpMethod.Put, new Uri(_httpClient.BaseAddress, $"api/one-click/configs/{WebUtility.UrlEncode(config.ConfigId)}"))
 			{
 				Content = content
@@ -518,23 +518,23 @@ namespace Target365.Sdk
 		}
 
 		/// <summary>
-		/// Sends a Strex-registration sms.
+		/// Initiates Strex-registation by SMS.
 		/// </summary>
-		/// <param name="registrationSms">Strex registration sms object.</param>
+		/// <param name="registrationSms">Strex registration sms.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		public async Task SendStrexRegistrationSmsAsync(StrexRegistrationSms registrationSms, CancellationToken cancellationToken = default)
 		{
 			if (registrationSms == null) throw new ArgumentNullException(nameof(registrationSms));
 			if (registrationSms.MerchantId == null) throw new ArgumentNullException(nameof(registrationSms.MerchantId));
-			if (registrationSms.TransactionId == null) throw new ArgumentNullException(nameof(registrationSms.TransactionId));
 			if (registrationSms.Recipient == null) throw new ArgumentNullException(nameof(registrationSms.Recipient));
+			if (registrationSms.TransactionId == null) throw new ArgumentNullException(nameof(registrationSms.TransactionId));
 
-			var content = new StringContent(JsonConvert.SerializeObject(registrationSms, _jsonSerializerSettings), Encoding.UTF8, "application/json");
-			using var request = new HttpRequestMessage(HttpMethod.Put, new Uri(_httpClient.BaseAddress, "api/strex/registrationsms"))
+			var content = new StringContent(Serialize(registrationSms), Encoding.UTF8, "application/json");
+			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/strex/registrationsms"))
 			{
 				Content = content
 			};
-			
+
 			await SignRequest(request).ConfigureAwait(false);
 			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
@@ -560,7 +560,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<StrexMerchant>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<StrexMerchant>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -573,7 +573,7 @@ namespace Target365.Sdk
 			if (merchant == null) throw new ArgumentNullException(nameof(merchant));
 			if (merchant.MerchantId == null) throw new ArgumentNullException(nameof(merchant.MerchantId));
 
-			var content = new StringContent(JsonConvert.SerializeObject(merchant, _jsonSerializerSettings), Encoding.UTF8, "application/json");
+			var content = new StringContent(Serialize(merchant), Encoding.UTF8, "application/json");
 			using var request = new HttpRequestMessage(HttpMethod.Put, new Uri(_httpClient.BaseAddress, $"api/strex/merchants/{WebUtility.UrlEncode(merchant.MerchantId)}"))
 			{
 				Content = content
@@ -611,7 +611,7 @@ namespace Target365.Sdk
 		{
 			if (oneTimePassword == null) throw new ArgumentException($"{nameof(oneTimePassword)} cannot be null.");
 
-			var content = new StringContent(JsonConvert.SerializeObject(oneTimePassword, _jsonSerializerSettings), Encoding.UTF8, "application/json");
+			var content = new StringContent(Serialize(oneTimePassword), Encoding.UTF8, "application/json");
 			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/strex/one-time-passwords"))
 			{
 				Content = content
@@ -643,7 +643,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<OneTimePassword>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<OneTimePassword>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -655,7 +655,7 @@ namespace Target365.Sdk
 		{
 			if (transaction == null) throw new ArgumentException($"{nameof(transaction)} cannot be null.");
 
-			var content = new StringContent(JsonConvert.SerializeObject(transaction, _jsonSerializerSettings), Encoding.UTF8, "application/json");
+			var content = new StringContent(Serialize(transaction), Encoding.UTF8, "application/json");
 			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/strex/transactions"))
 			{
 				Content = content
@@ -689,7 +689,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<StrexTransaction>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<StrexTransaction>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -731,7 +731,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<StrexUserValidity>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<StrexUserValidity>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -751,7 +751,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<PublicKey>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<PublicKey>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -770,7 +770,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<PublicKey[]>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<PublicKey[]>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -790,7 +790,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return JsonConvert.DeserializeObject<PublicKey>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+			return Deserialize<PublicKey>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -888,6 +888,16 @@ namespace Target365.Sdk
 			return httpClient;
 		}
 
+		private static string Serialize<T>(T item)
+		{
+			return JsonConvert.SerializeObject(item, _jsonSerializerSettings);
+		}
+
+		private static T Deserialize<T>(string json)
+		{
+			return (T)JsonConvert.DeserializeObject<T>(json, _jsonSerializerSettings);
+		}
+
 		private byte[] DerAns1ToCngEcPublicBlob(byte[] DerAns1Bytes)
 		{
 			var secp256r1Prefix = Convert.FromBase64String("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE");
@@ -947,7 +957,7 @@ namespace Target365.Sdk
 
 			try
 			{
-				var httpError = JsonConvert.DeserializeObject<ErrorHolder>(await response.Content.ReadAsStringAsync().ConfigureAwait(false), _jsonSerializerSettings);
+				var httpError = Deserialize<ErrorHolder>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 				message = httpError?.Message;
 			}
 			catch
