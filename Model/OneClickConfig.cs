@@ -102,5 +102,23 @@ namespace Target365.Sdk
 		/// </summary>
 		[DataMember]
 		public string OfflineText { get; set; }
+
+		/// <summary>
+		/// Subscription interval (weekly, monthly, yearly)
+		/// </summary>
+		[DataMember]
+		public string SubscriptionInterval { get; set; }
+
+		/// <summary>
+		/// Subscription price - in whole NOK. Cents (øre) are supported by the first two decimal places.
+		/// </summary>
+		[DataMember]
+		public decimal? SubscriptionPrice { get; set; }
+
+		/// <summary>
+		/// Subscription start sms - sent when recurring transaction started.
+		/// </summary>
+		[DataMember]
+		public string SubscriptionStartSms { get; set; }
 	}
 }

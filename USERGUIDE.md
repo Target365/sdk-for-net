@@ -237,10 +237,22 @@ var config = new OneClickConfig
     OfflineText = "Buy with PIN-code",
     InvoiceText = "Donation test",
     RedirectUrl = "https://your-return-url.com?id={TransactionId}", // {TransactionId} is replaced by actual transaction id
+    Recurring = false
 };
 
 await serviceClient.SaveOneClickConfigAsync(config);
 ```
+
+If Recurring is set to 'true', the following parameters must be set in the OneClickConfig, and will be displayed to the user before clicking OK:
+
+* SubscriptionInterval - Possible values are "weekly", "monthly", "yearly"
+
+* SubscriptionPrice - How much the subscriber will be charged each interval
+
+This parameter is optional:
+
+* SubscriptionStartSms - SMS that will be sent to the user when subscription starts.
+
 
 ### One-time transaction
 This example sets up a simple one-time transaction for one-click without the use of config. After creation you can redirect the end-user to the one-click landing page by redirecting to http://betal.strex.no/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for PROD and http://test-strex.target365.io/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for TEST-environment.
