@@ -237,13 +237,16 @@ var config = new OneClickConfig
     OfflineText = "Buy with PIN-code",
     InvoiceText = "Donation test",
     RedirectUrl = "https://your-return-url.com?id={TransactionId}", // {TransactionId} is replaced by actual transaction id
-    Recurring = false
+    Recurring = true,
+    SubscriptionInterval = "monthly",
+    SubscriptionPrice = 99,
+    SubscriptionStartSms = "Thanks for donating 99kr each month."
 };
 
 await serviceClient.SaveOneClickConfigAsync(config);
 ```
 
-If Recurring is set to 'true', the following parameters must be set in the OneClickConfig, and will be displayed to the user before clicking OK:
+If Recurring is set to 'false', the following parameters are optional:
 
 * SubscriptionInterval - Possible values are "weekly", "monthly", "yearly"
 
