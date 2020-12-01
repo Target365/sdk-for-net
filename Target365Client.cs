@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,8 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Newtonsoft.Json.Converters;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Target365.Sdk
 {
@@ -21,27 +20,15 @@ namespace Target365.Sdk
 	public class Target365Client : ILookupClient, IKeywordClient, IInMessageClient, IOutMessageClient, IStrexClient, IPublicKeysClient, IVerificationClient, IDisposable
 	{
 		private static readonly Lazy<HttpClient> _staticHttpClient = new Lazy<HttpClient>(CreateHttpClient, true);
-		private static Dictionary<string, PublicKey> _publicKeys = new Dictionary<string, PublicKey>();
+		private static readonly Dictionary<string, PublicKey> _publicKeys = new Dictionary<string, PublicKey>();
 		private readonly HttpClient _httpClient;
 		private readonly string _keyName;
-		private readonly CngKey _cngPublicKey;
-
-		private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
-		{
-			Converters = new List<JsonConverter>
-			{
-				new StringEnumConverter { CamelCaseText = false }
-			},
-			ContractResolver = new DefaultContractResolver
-			{
-				NamingStrategy = new CamelCaseNamingStrategy { ProcessDictionaryKeys = false }
-			}
-		};
-
+		private readonly byte[] _cngPrivateKeyBytes;
+		private readonly JsonSerializerOptions _jsonSerializerOptions;
 		/// <summary>
 		/// Minimum HTTP timeout.
 		/// </summary>
-		public static TimeSpan MinimumHttpTimeout = TimeSpan.FromSeconds(30);
+		public static TimeSpan MinimumHttpTimeout = TimeSpan.FromSeconds(10);
 
 		/// <summary>
 		/// ServiceClient constructor.
@@ -49,7 +36,7 @@ namespace Target365.Sdk
 		/// <param name="baseUrl">Base url - provided by Target365.</param>
 		/// <param name="keyName">Key name registered as a public key with Target365.</param>
 		/// <param name="privateKey">Private key as a base64-encoded string.</param>
-		/// <param name="httpTimeout">Http timeout for client. Minimum 30 seconds and default value is 60.</param>
+		/// <param name="httpTimeout">Http timeout for client. Minimum is 10 seconds and default value is 30 seconds.</param>
 		/// <param name="httpMessageHandler">Http message handler to inject.</param>
 		public Target365Client(Uri baseUrl, string keyName, string privateKey, TimeSpan? httpTimeout = null, HttpMessageHandler httpMessageHandler = null)
 		{
@@ -62,54 +49,64 @@ namespace Target365.Sdk
 #endif
 
 			if (httpTimeout == null)
-				httpTimeout = TimeSpan.FromSeconds(60);
+				httpTimeout = TimeSpan.FromSeconds(30);
 
 			if (httpTimeout < MinimumHttpTimeout)
 				throw new ArgumentException($"httpTimeout {httpTimeout} too low. Minimum is {MinimumHttpTimeout}");
 
 			_keyName = keyName;
-			if (privateKey.Length > 300)
-				_cngPublicKey = CngKey.Import(Convert.FromBase64String(privateKey), CngKeyBlobFormat.GenericPrivateBlob);
-			else
-				_cngPublicKey = CngKey.Import(Convert.FromBase64String(privateKey), CngKeyBlobFormat.EccPrivateBlob);
+			_cngPrivateKeyBytes = Convert.FromBase64String(privateKey);
+			
+			try
+			{
+				using var ecdsa = CryptoUtils.GetEcdsaFromCngPrivateKey(_cngPrivateKeyBytes);
+			}
+			catch
+			{
+				throw new ArgumentException($"{nameof(privateKey)} cannot be parsed properly.");
+			}
 
 			_httpClient = new HttpClient(httpMessageHandler ?? new HttpClientHandler());
 			_httpClient.BaseAddress = baseUrl;
 			_httpClient.DefaultRequestHeaders.Accept.Clear();
 			_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 			_httpClient.Timeout = httpTimeout.Value;
+
+			_jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, IgnoreNullValues = true };
+			_jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+			_jsonSerializerOptions.Converters.Add(new StringObjectDictionaryJsonConverter());
 		}
 
 		/// <summary>
 		/// Casts this service client as ILookupService.
 		/// </summary>
-		public ILookupClient AsLookupService() { return this as ILookupClient; }
+		public ILookupClient AsLookupService() { return this; }
 
 		/// <summary>
 		/// Casts this service client as IOutMessageService.
 		/// </summary>
-		public IOutMessageClient AsOutMessageService() { return this as IOutMessageClient; }
+		public IOutMessageClient AsOutMessageService() { return this; }
 
 		/// <summary>
 		/// Casts this service client as IKeywordService.
 		/// </summary>
-		public IKeywordClient AsKeywordService() { return this as IKeywordClient; }
+		public IKeywordClient AsKeywordService() { return this; }
 
 		/// <summary>
 		/// Casts this service client as IStrexService.
 		/// </summary>
-		public IStrexClient AsStrexService() { return this as IStrexClient; }
+		public IStrexClient AsStrexService() { return this; }
 
 		/// <summary>
 		/// Casts this service client as IPublicKeysClient.
 		/// </summary>
 		/// <returns></returns>
-		public IPublicKeysClient AsPublicKeysClient() { return this as IPublicKeysClient; }
+		public IPublicKeysClient AsPublicKeysClient() { return this; }
 
 		/// <summary>
 		/// Casts this service client as IRequestVerifier.
 		/// </summary>
-		public IVerificationClient AsRequestVerifier() { return this as IVerificationClient; }
+		public IVerificationClient AsRequestVerifier() { return this; }
 		
 		/// <summary>
 		/// Pings the service and returns a hello message.
@@ -124,7 +121,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return Deserialize<string>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+			return JsonSerializer.Deserialize<string>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>
@@ -851,24 +848,39 @@ namespace Target365.Sdk
 				contentHash = Convert.ToBase64String(sha256.ComputeHash(contentBytes));
 			}
 
-			if (!_publicKeys.TryGetValue(keyName, out var publicKey))
+			PublicKey publicKey;
+
+			lock (_publicKeys)
+			{
+				_publicKeys.TryGetValue(keyName, out publicKey);
+			}
+
+			if (publicKey == null)
 			{
 				publicKey = await GetServerPublicKeyAsync(keyName, cancellationToken).ConfigureAwait(false);
-				_publicKeys[keyName] = publicKey ?? throw new ArgumentNullException(nameof(keyName), $"public key '{keyName}' not found.");
+
+				lock (_publicKeys)
+				{
+					_publicKeys[keyName] = publicKey ?? throw new ArgumentNullException(nameof(keyName), $"public key '{keyName}' not found.");
+				}
 			}
 
 			var message = $"{method}{uri}{timestamp}{nounce}{contentHash}";
 			var signatureBytes = Convert.FromBase64String(signature);
-			var cngEcPublicBlob = DerAns1ToCngEcPublicBlob(Convert.FromBase64String(publicKey.PublicKeyString));
 
-			using var ecdsa = new ECDsaCng(CngKey.Import(cngEcPublicBlob, CngKeyBlobFormat.EccPublicBlob));
-#if NET46
-			if (!ecdsa.VerifyData(Encoding.UTF8.GetBytes(message), signatureBytes))
-				throw new UnauthorizedAccessException("Incorrect signature parameter in request.");
-#else
-				if (!ecdsa.VerifyData(Encoding.UTF8.GetBytes(message), signatureBytes, HashAlgorithmName.SHA256))
+			if (publicKey.SignAlgo == CryptoUtils.ECDsaP256)
+			{
+				using var ecdsa = CryptoUtils.GetEcdsaFromPemPrivateKey(Convert.FromBase64String(publicKey.PublicKeyString));
+				using var sha = SHA256.Create();
+				var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(message));
+				
+				if (!ecdsa.VerifyHash(hash, signatureBytes))
 					throw new UnauthorizedAccessException("Incorrect signature parameter in request.");
-#endif
+			}
+			else
+			{
+				throw new ArgumentException($"Unsupported crypto algorithm '{publicKey.SignAlgo}'.");
+			}
 		}
 
 		/// <summary>
@@ -888,24 +900,14 @@ namespace Target365.Sdk
 			return httpClient;
 		}
 
-		private static string Serialize<T>(T item)
+		private string Serialize<T>(T item)
 		{
-			return JsonConvert.SerializeObject(item, _jsonSerializerSettings);
+			return JsonSerializer.Serialize(item, _jsonSerializerOptions);
 		}
 
-		private static T Deserialize<T>(string json)
+		private T Deserialize<T>(string json)
 		{
-			return (T)JsonConvert.DeserializeObject<T>(json, _jsonSerializerSettings);
-		}
-
-		private byte[] DerAns1ToCngEcPublicBlob(byte[] DerAns1Bytes)
-		{
-			var secp256r1Prefix = Convert.FromBase64String("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE");
-			var cngBlobPrefix = Convert.FromBase64String("RUNTMSAAAAA=");
-			var cngBlob = new byte[cngBlobPrefix.Length + DerAns1Bytes.Length - secp256r1Prefix.Length];
-			Buffer.BlockCopy(cngBlobPrefix, 0, cngBlob, 0, cngBlobPrefix.Length);
-			Buffer.BlockCopy(DerAns1Bytes, secp256r1Prefix.Length, cngBlob, cngBlobPrefix.Length, DerAns1Bytes.Length - secp256r1Prefix.Length);
-			return cngBlob;
+			return JsonSerializer.Deserialize<T>(json, _jsonSerializerOptions);
 		}
 
 		private async Task SignRequest(HttpRequestMessage request)
@@ -927,23 +929,11 @@ namespace Target365.Sdk
 			}
 
 			var message = $"{method}{uri}{timestamp}{nonce}{contentHash}";
-
-			if (_cngPublicKey.KeySize >= 1024)
-			{
-				using var rsa = new RSACng(_cngPublicKey);
-				var signatureString = Convert.ToBase64String(rsa.SignData(Encoding.UTF8.GetBytes(message), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
-				request.Headers.Authorization = new AuthenticationHeaderValue("HMAC", $"{keyName}:{timestamp}:{nonce}:{signatureString}");
-			}
-			else
-			{
-				using var ecdsa = new ECDsaCng(_cngPublicKey);
-#if NET46
-				var signatureString = Convert.ToBase64String(ecdsa.SignData(Encoding.UTF8.GetBytes(message)));
-#else
-					var signatureString = Convert.ToBase64String(ecdsa.SignData(Encoding.UTF8.GetBytes(message), HashAlgorithmName.SHA256));
-#endif
-				request.Headers.Authorization = new AuthenticationHeaderValue("HMAC", $"{keyName}:{timestamp}:{nonce}:{signatureString}");
-			}
+			using var ecdsa = CryptoUtils.GetEcdsaFromCngPrivateKey(_cngPrivateKeyBytes);
+			using var sha = SHA256.Create();
+			var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(message));
+			var signatureString = Convert.ToBase64String(ecdsa.SignHash(hash));
+			request.Headers.Authorization = new AuthenticationHeaderValue("HMAC", $"{keyName}:{timestamp}:{nonce}:{signatureString}");
 		}
 
 		private class ErrorHolder
@@ -957,7 +947,7 @@ namespace Target365.Sdk
 
 			try
 			{
-				var httpError = Deserialize<ErrorHolder>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+				var httpError = JsonSerializer.Deserialize<ErrorHolder>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 				message = httpError?.Message;
 			}
 			catch
