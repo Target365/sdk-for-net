@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Globals">
     <SccProjectName>SAK</SccProjectName>
@@ -8,15 +8,15 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>net46;net461;net462;net47;net471;net472;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net461;netstandard2.1</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.5.1</Version>
+    <Version>1.6.0</Version>
     <Authors>Target365</Authors>
     <Company>Target365</Company>
     <Product>Target365 SDK</Product>
     <Description>.NET Library for Target365 Online Services</Description>
     <Copyright></Copyright>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReleaseNotes>Added support for Linux and Mac OSX.</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>Target365.Sdk.snk</AssemblyOriginatorKeyFile>
@@ -27,24 +27,20 @@
     <RepositoryUrl>https://github.com/Target365/sdk-for-net</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>target365_nuget_logo.png</PackageIcon>
-    <AssemblyVersion>1.5.1.0</AssemblyVersion>
-    <FileVersion>1.5.1.0</FileVersion>
+    <AssemblyVersion>1.6.0.0</AssemblyVersion>
+    <FileVersion>1.6.0.0</FileVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <DocumentationFile>bin\Release\net46\Target365.Sdk.xml</DocumentationFile>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DocumentationFile>bin\Debug\net46\Target365.Sdk.xml</DocumentationFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>0</WarningLevel>
@@ -59,56 +55,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
-    <PackageReference Include="System.Security.Cryptography.Cng" Version="4.4.0" Condition="'$(TargetFramework)' == 'netstandard1.4'" />
-    <PackageReference Include="System.Security.Cryptography.Cng" Version="4.4.0" Condition="'$(TargetFramework)' == 'netstandard1.5'" />
-    <PackageReference Include="System.Security.Cryptography.Cng" Version="4.4.0" Condition="'$(TargetFramework)' == 'netstandard1.6'" />
-    <PackageReference Include="System.Security.Cryptography.Cng" Version="4.4.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net461'" />
   </ItemGroup>
   
   <ItemGroup>
-    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net46'" />
-    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net461'" />
-    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net462'" />
-    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net47'" />
-    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net471'" />
-    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net472'" />
+    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+    <PackageReference Include="System.Security.Cryptography.Cng" Version="4.7.0" />
+    <PackageReference Include="System.Text.Json" Version="5.0.0" />
   </ItemGroup>
-  
-  <ItemGroup Condition="'$(TargetFramework)' == 'net47'">
-    <PackageReference Include="System.Text.Json">
-      <Version>4.7.2</Version>
-    </PackageReference>
-  </ItemGroup>
-  
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Text.Json">
-      <Version>4.7.2</Version>
-    </PackageReference>
-  </ItemGroup>
-  
-  <ItemGroup Condition="'$(TargetFramework)' == 'net471'">
-    <PackageReference Include="System.Text.Json">
-      <Version>4.7.2</Version>
-    </PackageReference>
-  </ItemGroup>
-  
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-    <PackageReference Include="System.Text.Json">
-      <Version>4.7.2</Version>
-    </PackageReference>
-  </ItemGroup>
-  
-  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-    <PackageReference Include="System.Text.Json">
-      <Version>4.7.2</Version>
-    </PackageReference>
-  </ItemGroup>
-  
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <PackageReference Include="System.Text.Json">
-      <Version>4.7.2</Version>
-    </PackageReference>
-  </ItemGroup>
-
 </Project>
