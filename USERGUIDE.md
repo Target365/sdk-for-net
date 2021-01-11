@@ -14,6 +14,7 @@
     * [Create a Strex payment transaction](#create-a-strex-payment-transaction)
     * [Create a Strex payment transaction with one-time password](#create-a-strex-payment-transaction-with-one-time-password)
     * [Reverse a Strex payment transaction](#reverse-a-strex-payment-transaction)
+    * [Check status on Strex payment transaction](#check-status-on-strex-payment-transaction)
 * [One-click](#one-click)
     * [One-click config](#one-click-config)
     * [One-time transaction](#one-time-transaction)
@@ -98,9 +99,7 @@ ServicePointManager.UseNagleAlgorithm = false;
 var baseUrl = new Uri("https://shared.target365.io");
 var keyName = "YOUR_KEY";
 var privateKey = "BASE64_EC_PRIVATE_KEY";
-var serviceClient = new Target365Client(baseUrl, keyName, privateKey);
-...
-serviceClient.Dispose() // Remember to dispose the client or use using clauses :)
+var serviceClient = new Target365Client(baseUrl, keyName, privateKey); // Target365Client uses HttpClient and should be a singleton!
 ```
 ## Text messages
 
@@ -212,6 +211,14 @@ This example reverses a previously billed Strex payment transaction. The origina
 var reversalTransactionId = await serviceClient.ReverseStrexTransactionAsync(transactionId);
 ```
 
+### Check status on Strex payment transaction
+This example gets a previously created Strex transaction to check its status. This method will block up to 20 seconds if the transaction is still being processed.
+```C#
+var transaction = await serviceClient.GetStrexTransactionAsync(transactionId);
+var statusCode = transaction.StatusCode;
+var isBilled = transaction.Billed == true;
+```
+
 ## One-click
 
 Please note:
@@ -282,7 +289,11 @@ await serviceClient.CreateStrexTransactionAsync(transaction);
 ```
 ### Setup subscription transaction
 This example sets up a subscription transaction for one-click. After creation you can redirect the end-user to the one-click landing page by redirecting to http://betal.strex.no/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for PROD and http://strex-test.target365.io/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for TEST-environment.
+
+The end user subscription database is stored at your end and you must initiate rebilling. Please also note that it's your responsibility to give end users a welcome message and also identify how to unsubscribe to the service. Remember to get pre-approval of service from Strex before production.
+
 ![subscription sequence](https://github.com/Target365/sdk-for-net/raw/master/oneclick-subscription-flow.png "Subscription sequence diagram")
+
 ```C#
 var transaction = new StrexTransaction
 {
