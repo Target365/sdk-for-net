@@ -17,8 +17,6 @@
     * [Check status on Strex payment transaction](#check-status-on-strex-payment-transaction)
 * [One-click](#one-click)
     * [One-click config](#one-click-config)
-    * [One-time transaction](#one-time-transaction)
-    * [Setup subscription transaction](#setup-subscription-transaction)
     * [Recurring transaction](#recurring-transaction)
 * [Lookup](#lookup)
     * [Address lookup for mobile number](#address-lookup-for-mobile-number)
@@ -90,16 +88,10 @@ using System.Net;
 using System.Threading.Tasks;
 using Target365.Sdk;
 
-// ONLY FOR .NET FRAMEWORK: Set up Service Point Manager for high performance
-ServicePointManager.CheckCertificateRevocationList = false;
-ServicePointManager.DefaultConnectionLimit = 64;
-ServicePointManager.Expect100Continue = false;
-ServicePointManager.UseNagleAlgorithm = false;
-
-var baseUrl = new Uri("https://shared.target365.io");
+var url = new Uri("https://shared.target365.io");
 var keyName = "YOUR_KEY";
 var privateKey = "BASE64_EC_PRIVATE_KEY";
-var serviceClient = new Target365Client(baseUrl, keyName, privateKey); // Target365Client uses HttpClient and should be a singleton!
+var serviceClient = new Target365Client(url, keyName, privateKey); //Target365Client should be static singleton!
 ```
 ## Text messages
 
@@ -263,54 +255,6 @@ This parameter is optional:
 
 * SubscriptionStartSms - SMS that will be sent to the user when subscription starts.
 
-
-### One-time transaction
-This example sets up a simple one-time transaction for one-click without the use of config. After creation you can redirect the end-user to the one-click landing page by redirecting to http://betal.strex.no/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for PROD and http://test-strex.target365.io/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for TEST-environment.
-
-If the MSISDN can't be determined automatically on the landing page the end user will have to enter the MSISDN and will receice an SMS with a pin-code that must be entered. Entering the pin-code can be attempted only 3 times before the transaction is abandoned and the end user is redirected back to the redirectUrl.
-
-![one-time sequence](https://github.com/Target365/sdk-for-net/raw/master/oneclick-simple-transaction-flow.png "One-time sequence diagram")
-
-```C#
-var transaction = new StrexTransaction
-{
-    TransactionId = transactionId,
-    ShortNumber = "2002",
-    MerchantId = "YOUR_MERCHANT_ID",
-    Price = 1,
-    ServiceCode = ServiceCodes.NonCommercialDonation,
-    InvoiceText = "Donation test"
-};
-
-transaction.Properties["RedirectUrl"] = "https://your-return-url.com?id=" + transactionId;
-await serviceClient.CreateStrexTransactionAsync(transaction);
-
-// TODO: Redirect end-user to one-click landing page
-```
-### Setup subscription transaction
-This example sets up a subscription transaction for one-click. After creation you can redirect the end-user to the one-click landing page by redirecting to http://betal.strex.no/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for PROD and http://strex-test.target365.io/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for TEST-environment.
-
-The end user subscription database is stored at your end and you must initiate rebilling. Please also note that it's your responsibility to give end users a welcome message and also identify how to unsubscribe to the service. Remember to get pre-approval of service from Strex before production.
-
-![subscription sequence](https://github.com/Target365/sdk-for-net/raw/master/oneclick-subscription-flow.png "Subscription sequence diagram")
-
-```C#
-var transaction = new StrexTransaction
-{
-    TransactionId = transactionId,
-    ShortNumber = "2002",
-    MerchantId = "YOUR_MERCHANT_ID",
-    Price = 1,
-    ServiceCode = ServiceCodes.NonCommercialDonation,
-    InvoiceText = "Donation test"
-};
-
-transaction.Properties["Recurring"] = true;
-transaction.Properties["RedirectUrl"] = "https://your-return-url.com?id=" + transactionId;
-await serviceClient.CreateStrexTransactionAsync(transaction);
-
-// TODO: Redirect end-user to one-click landing page
-```
 ### Recurring transaction
 This example sets up a recurring transaction for one-click. After creation you can immediately get the transaction to get the status code - the server will wait up to 20 seconds for the async transaction to complete.
 ![Recurring sequence](https://github.com/Target365/sdk-for-net/raw/master/oneclick-recurring-flow.png "Recurring sequence diagram")
