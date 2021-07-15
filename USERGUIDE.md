@@ -29,7 +29,7 @@
     * [DLR forward](#dlr-forward)
     * [DLR forward using the SDK](#dlr-forward-using-the-sdk)
     * [DLR status codes](#dlr-status-codes)
- * [Encoding](#encoding)
+* [Encoding](#encoding)
 
 ## Introduction
 The Target365 SDK gives you direct access to our online services like sending and receiving SMS, address lookup and Strex payment transactions. The SDK provides an appropriate abstraction level for C# development and is officially support by Target365. The SDK also implements very high security (ECDsaP256 HMAC).
