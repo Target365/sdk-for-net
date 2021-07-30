@@ -196,6 +196,28 @@ namespace Target365.Sdk
 #endif
 		}
 
+		public static ECDsa GetEcdsaFromPemPublicKey(byte[] pemBytes)
+		{
+#if NET461
+			var rawBytes = GetRawKey(pemBytes);
+			var cngBytes = GetCngBytes(rawBytes, ECDsaP256);
+			return new ECDsaCng(CngKey.Import(cngBytes, CngKeyBlobFormat.GenericPublicBlob));
+#else
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				var rawBytes = GetRawKey(pemBytes);
+				var cngBytes = GetCngBytes(rawBytes, ECDsaP256);
+				return new ECDsaCng(CngKey.Import(cngBytes, CngKeyBlobFormat.GenericPublicBlob));
+			}
+			else
+			{
+				var ecdsa = ECDsa.Create();
+				ecdsa.ImportSubjectPublicKeyInfo(pemBytes, out _);
+				return ecdsa;
+			}
+#endif
+		}
+
 		private static byte[] GetPemBytesFromCngPrivateKeyBytes(byte[] cngEcPrivateBlob)
 		{
 			var derPrefix = new byte[] { 0x30, 0x81, 0xA2, 0x02, 0x01, 0x00, 0x30, 0x13, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02, 0x01, 0x06, 0x08, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07, 0x04, 0x79, 0x30, 0x77, 0x02, 0x01, 0x01, 0x04, 0x20 };

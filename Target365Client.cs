@@ -870,7 +870,7 @@ namespace Target365.Sdk
 
 			if (publicKey.SignAlgo == CryptoUtils.ECDsaP256)
 			{
-				using var ecdsa = CryptoUtils.GetEcdsaFromPemPrivateKey(Convert.FromBase64String(publicKey.PublicKeyString));
+				using var ecdsa = CryptoUtils.GetEcdsaFromPemPublicKey(Convert.FromBase64String(publicKey.PublicKeyString));
 				using var sha = SHA256.Create();
 				var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(message));
 				
@@ -879,7 +879,7 @@ namespace Target365.Sdk
 			}
 			else
 			{
-				throw new ArgumentException($"Unsupported crypto algorithm '{publicKey.SignAlgo}'.");
+				throw new ArgumentException($"Unsupported sign algorithm '{publicKey.SignAlgo}'. Maybe you must update the Target365.Sdk nuget package?");
 			}
 		}
 
