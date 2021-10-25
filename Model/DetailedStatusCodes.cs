@@ -31,6 +31,11 @@
 		public const string UnknownError = "UnknownError";
 
 		/// <summary>
+		/// Message is in invalid state.
+		/// </summary>
+		public const string OtherError = "OtherError";
+
+		/// <summary>
 		/// Message is in a rejected state.
 		/// </summary>
 		public const string Rejected = "Rejected";
@@ -104,5 +109,60 @@
 		/// Timeout error.
 		/// </summary>
 		public const string TimeoutError = "TimeoutError";
+
+		/// <summary>
+		/// Transaction is pending.
+		/// </summary>
+		public const string Pending = "Pending";
+
+		/// <summary>
+		/// Temporary error.
+		/// </summary>
+		public const string TemporaryError = "TemporaryError";
+
+		/// <summary>
+		/// Missing pre-auth.
+		/// </summary>
+		public const string MissingPreAuth = "MissingPreAuth";
+
+		/// <summary>
+		/// Missing delivery report.
+		/// </summary>
+		public const string MissingDeliveryReport = "MissingDeliveryReport";
+
+		/// <summary>
+		/// Agent has Transaction.
+		/// </summary>
+		public const string UserInTransaction = "UserInTransaction";
+
+		/// <summary>
+		/// Connection offline.
+		/// </summary>
+		public const string ConnectionOffline = "ConnectionOffline";
+
+		/// <summary>
+		/// Invalid username/password.
+		/// </summary>
+		public const string InvalidCredentials = "InvalidCredentials";
+
+		/// <summary>
+		/// Invalid OTP transaction.
+		/// </summary>
+		public const string InvalidOtp = "InvalidOtp";
+
+		/// <summary>
+		/// Technical error returned from Card Payment PSP.
+		/// </summary>
+		public const string CardPspError = "CardPspError";
+
+		/// <summary>
+		/// Technical error MNO.
+		/// </summary>
+		public const string MnoError = "MnoError";
+
+		/// <summary>
+		/// Message was stopped because of monthly limit or similar.
+		/// </summary>
+		public const string Stopped = "Stopped";
 	}
 }
