@@ -62,12 +62,18 @@ namespace Target365.Sdk
 		/// Custom properties associated with keyword. Will be propagated to incoming messages.
 		/// </summary>
 		[DataMember]
-		public Dictionary<string, object> CustomProperties { get; set; }
+		public Dictionary<string, object> CustomProperties { get; set; } = new Dictionary<string, object>();
 
 		/// <summary>
 		/// Tags associated with keyword. Can be used for statistics and grouping.
 		/// </summary>
 		[DataMember]
 		public ICollection<string> Tags { get; set; } = new HashSet<string>();
+
+		/// <summary>
+		/// Alias keywords associated with keyword.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public ICollection<string> Aliases { get; set; } = new HashSet<string>();
 	}
 }
