@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Target365.Sdk
 {
@@ -19,6 +20,12 @@ namespace Target365.Sdk
 		/// </summary>
 		[DataMember]
 		public string CorrelationId { get; set; }
+
+		/// <summary>
+		/// Session id associated with the message.
+		/// </summary>
+		[DataMember]
+		public string SessionId { get; set; }
 
 		/// <summary>
 		/// Price associated with the message.
@@ -79,5 +86,11 @@ namespace Target365.Sdk
 		/// </summary>
 		[DataMember]
 		public int SmscMessageParts { get; set; }
+
+		/// <summary>
+		/// Timestamp for when the message was received at the handset (resolution to whole minute, not second).
+		/// </summary>
+		[DataMember]
+		public DateTimeOffset? Received { get; set; }
 	}
 }
