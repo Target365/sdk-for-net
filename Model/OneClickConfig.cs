@@ -50,6 +50,12 @@ namespace Target365.Sdk
 		public string BusinessModel { get; set; }
 
 		/// <summary>
+		/// Service id used for pre-authorizations and recurring billing.
+		/// </summary>
+		[DataMember]
+		public string PreAuthServiceId { get; set; }
+
+		/// <summary>
 		/// Age requirements - typically 18 for subscriptions and adult content.
 		/// </summary>
 		[DataMember]

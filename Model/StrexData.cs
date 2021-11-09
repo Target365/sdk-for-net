@@ -63,6 +63,12 @@ namespace Target365.Sdk
 		public int Timeout { get; set; } = 5;
 
 		/// <summary>
+		/// Service id used for pre-authorizations and recurring billing.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public string PreAuthServiceId { get; set; }
+
+		/// <summary>
 		/// Read-only: Whether billing was performed. Null if status is unknown.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
