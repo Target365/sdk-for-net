@@ -69,6 +69,12 @@ namespace Target365.Sdk
 		public string PreAuthServiceId { get; set; }
 
 		/// <summary>
+		/// Service description used for pre-authorizations and recurring billing.
+		/// </summary>
+		[DataMember]
+		public string PreAuthServiceDescription { get; set; }
+
+		/// <summary>
 		/// Read-only: Whether billing was performed. Null if status is unknown.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
