@@ -72,7 +72,7 @@ namespace Target365.Sdk
 			_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 			_httpClient.Timeout = httpTimeout.Value;
 
-			_jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, IgnoreNullValues = true };
+			_jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
 			_jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 			_jsonSerializerOptions.Converters.Add(new StringObjectDictionaryJsonConverter());
 		}
