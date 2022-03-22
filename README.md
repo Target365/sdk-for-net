@@ -7,7 +7,52 @@ Strex AS is a Norwegian payment and SMS gateway (Strex Connect) provider. Strex 
 ### Getting started
 To get started, please click here: https://strex.no/strex-connect#Prispakker and register your organisation. 
 For the SDK please send us an email at <sdk@strex.no> containing your EC public key in DER(ANS.1) format.
-See our [C# User Guide](USERGUIDE.md) on how to generate your private-public key pair in C#.
+
+## Generate private-public key pair
+```C#
+using System;
+using System.Linq;
+using System.Security.Cryptography;
+
+namespace Target365KeyGen
+{
+    class Program
+    {
+        static void Main()
+        {
+            var keyParams = new CngKeyCreationParameters
+            {
+                ExportPolicy = CngExportPolicies.AllowPlaintextExport,
+                KeyUsage = CngKeyUsages.Decryption | CngKeyUsages.Signing
+            };
+
+            using (var cngKey = CngKey.Create(CngAlgorithm.ECDsaP256, null, keyParams))
+            using (var cng = new ECDsaCng(cngKey))
+            {
+                var privateKey = Convert.ToBase64String(cng.Key.Export(CngKeyBlobFormat.EccPrivateBlob));
+                var publicKeyBytes = cng.Key.Export(CngKeyBlobFormat.EccPublicBlob);
+                var derPublicKey = Convert.ToBase64String(CngEcPublicBlobToDerAns1(publicKeyBytes));
+
+                Console.WriteLine($".NET client private key:");
+                Console.WriteLine(privateKey);
+                Console.WriteLine();
+
+                Console.WriteLine($"Target365 public key:");
+                Console.WriteLine(derPublicKey);
+                Console.WriteLine();
+            }
+        }
+
+        public static byte[] CngEcPublicBlobToDerAns1(byte[] cngEcPublicBlob)
+        {
+            var secp256r1Prefix = Convert.FromBase64String("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE");
+            var rawKey = cngEcPublicBlob.Skip(8);
+            return secp256r1Prefix.Concat(rawKey).ToArray();
+        }
+    }
+}
+
+```
 
 ### NuGet
 ```
