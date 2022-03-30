@@ -6,6 +6,7 @@
     * [Target365Client](#target365client)
 * [Text messages](#text-messages)
     * [Send an SMS](#send-an-sms)
+    * [Set DeliveryReport URL for an SMS](#set-deliveryreport-url-for-an-sms)
     * [Schedule an SMS for later sending](#schedule-an-sms-for-later-sending)
     * [Edit a scheduled SMS](#edit-a-scheduled-sms)
     * [Delete a scheduled SMS](#delete-a-scheduled-sms)
@@ -63,7 +64,20 @@ var outMessage = new OutMessage
 
 await serviceClient.CreateOutMessageAsync(outMessage);
 ```
+### Set DeliveryReport URL for an SMS
+This example sends an SMS and later a [DeliveryReport](#dlr-forward) will be posted at the url specified below.
+```C#
+var outMessage = new OutMessage
+{
+    TransactionId = Guid.NewGuid().ToString(),
+    Sender = "Target365",
+    Recipient = "+4798079008",
+    Content = "Hello World from SMS!",
+    DeliveryReportUrl = "https://your.site.com/sms/dlr"
+};
 
+await serviceClient.CreateOutMessageAsync(outMessage);
+```
 ### Schedule an SMS for later sending
 This example sets up a scheduled SMS. Scheduled messages can be updated or deleted before the time of sending.
 ```C#
