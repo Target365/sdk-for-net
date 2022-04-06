@@ -59,7 +59,7 @@ namespace Target365.Sdk
 			
 			try
 			{
-				using var ecdsa = CryptoUtils.GetEcdsaFromCngPrivateKey(_cngPrivateKeyBytes);
+				using var ecdsa = CryptoUtils.GetEcdsaFromPrivateKey(_cngPrivateKeyBytes);
 			}
 			catch
 			{
@@ -929,7 +929,7 @@ namespace Target365.Sdk
 			}
 
 			var message = $"{method}{uri}{timestamp}{nonce}{contentHash}";
-			using var ecdsa = CryptoUtils.GetEcdsaFromCngPrivateKey(_cngPrivateKeyBytes);
+			using var ecdsa = CryptoUtils.GetEcdsaFromPrivateKey(_cngPrivateKeyBytes);
 			using var sha = SHA256.Create();
 			var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(message));
 			var signatureString = Convert.ToBase64String(ecdsa.SignHash(hash));

@@ -157,23 +157,43 @@ namespace Target365.Sdk
 			throw new ArgumentException("Unsupported raw key. Only ECDsaP256, ECDsaP521 and RSA is supported.");
 		}
 
-		public static ECDsa GetEcdsaFromCngPrivateKey(byte[] cngPrivateKey)
+		public static ECDsa GetEcdsaFromPrivateKey(byte[] privateKey)
 		{
 #if NET461
-			return new ECDsaCng(CngKey.Import(cngPrivateKey, CngKeyBlobFormat.EccPrivateBlob));
+			if (IsPemPrivateKey(privateKey))
+				privateKey = PemPrivateKeyToCng(privateKey);
+
+			return new ECDsaCng(CngKey.Import(privateKey, CngKeyBlobFormat.EccPrivateBlob));
 #else
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
-				return new ECDsaCng(CngKey.Import(cngPrivateKey, CngKeyBlobFormat.EccPrivateBlob));
+				if (IsPemPrivateKey(privateKey))
+					privateKey = PemPrivateKeyToCng(privateKey);
+
+				return new ECDsaCng(CngKey.Import(privateKey, CngKeyBlobFormat.EccPrivateBlob));
 			}
 			else
 			{
 				var ecdsa = ECDsa.Create();
-				var pemBytes = GetPemBytesFromCngPrivateKeyBytes(cngPrivateKey);
+				var pemBytes = IsPemPrivateKey(privateKey) ? privateKey : GetPemBytesFromCngPrivateKeyBytes(privateKey);
 				ecdsa.ImportPkcs8PrivateKey(pemBytes, out _);
 				return ecdsa;
 			}
 #endif
+		}
+
+		private static bool IsPemPrivateKey(byte[] privateKey)
+		{
+			return privateKey[0] == 0x30 && privateKey.Length == 165;
+		}
+
+		public static byte[] PemPrivateKeyToCng(byte[] pemPrivateKey)
+		{
+			var prefix = new byte[] { 0x45, 0x43, 0x53, 0x32, 0x20, 0x00, 0x00, 0x00 };
+			var d = pemPrivateKey.Skip(36).Take(32);
+			var x = pemPrivateKey.Skip(36 + 32 + 18).Take(32);
+			var y = pemPrivateKey.Skip(36 + 32 + 18 + 32).Take(32);
+			return prefix.Concat(x).Concat(y).Concat(d).ToArray();
 		}
 
 		public static ECDsa GetEcdsaFromPemPrivateKey(byte[] pemPrivateKey)

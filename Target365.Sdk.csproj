@@ -10,13 +10,13 @@
   <PropertyGroup>
     <TargetFrameworks>net461;netstandard2.1</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.7.2</Version>
+    <Version>1.7.3</Version>
     <Authors>Target365</Authors>
     <Company>Target365</Company>
     <Product>Target365 SDK</Product>
     <Description>.NET Library for Target365 Online Services</Description>
     <Copyright></Copyright>
-    <PackageReleaseNotes>Added field PreAuthServiceDescription on StrexData and OneClickConfig.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added support for PEM formatted private key.</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>Target365.Sdk.snk</AssemblyOriginatorKeyFile>
@@ -27,8 +27,8 @@
     <RepositoryUrl>https://github.com/Target365/sdk-for-net</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>target365_nuget_logo.png</PackageIcon>
-    <AssemblyVersion>1.7.2.0</AssemblyVersion>
-    <FileVersion>1.7.2.0</FileVersion>
+    <AssemblyVersion>1.7.3.0</AssemblyVersion>
+    <FileVersion>1.7.3.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup>
