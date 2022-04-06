@@ -23,7 +23,7 @@ eYBRvK7GScuDQo2+DjEn4hUsnKDZw9o4y+xRat+ItUGKcvVCMW8Swod5
 -----END PRIVATE KEY-----
 ```
 
-Here's an example of how the private key should look in C#:
+Here's how the private key should be constructed in C#:
 ```C#
 var privateKey = "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgzNTTnuXqcrI5uSEa"
     + "V6REzZG7hU+TzRl0Phe56k9/gPWhRANCAAQwB42Sozmtci4mDjnegx003FBV+9PQ"
