@@ -1,57 +1,45 @@
 ## ![Strex](https://github.com/Target365/sdk-for-php/raw/master/strex.png "Strex")
-Strex AS is a Norwegian payment and SMS gateway (Strex Connect) provider. Strex withholds an e-money license and processes more than 70 million transactions every year. Strex has more than 4.2 mill customers in Norway and are owned by the Norwegian mobile network operators (Telenor, Telia and Ice). Strex Connect is based on the Target365 marketing and communication platform. 
-
-## Target365 SDK for .NET
-[![License](https://img.shields.io/github/license/Target365/sdk-for-net.svg?style=flat)](https://opensource.org/licenses/MIT)
+Strex AS is a Norwegian payment and SMS gateway (Strex Connect) provider. Strex withholds an e-money license and processes more than 70 million transactions every year. Strex has more than 4.2 mill customers in Norway and are owned by the Norwegian mobile network operators (Telenor, Telia and Ice). Strex Connect is based on the Target365 marketing and communication platform.
+## Target365 SDK for Node
+[![License](https://img.shields.io/github/license/Target365/sdk-for-node.svg?style=flat)](https://opensource.org/licenses/MIT)
 
 ### Getting started
 To get started, please click here: https://strex.no/strex-connect#Prispakker and register your organisation. 
-For the SDK please send us an email at <sdk@strex.no> containing your EC public key in DER(ANS.1) format.
+After registration you can activate the SDK by sending us an email at <sdk@strex.no> containing your EC public key in PEM-format.
+You can generate your EC public/private key-pair using openssl like this:
+```
+openssl ecparam -name prime256v1 -genkey -noout -out private.pem
+```
+Use openssl to convert it to pk8 format which Node uses.
+```
+openssl pkcs8 -topk8 -inform pem -in private.pem -outform pem -nocrypt -out private.key
+```
+The file `private.key` should look something like this:
+```
+-----BEGIN PRIVATE KEY-----
+MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgzNTTnuXqcrI5uSEa
+V6REzZG7hU+TzRl0Phe56k9/gPWhRANCAAQwB42Sozmtci4mDjnegx003FBV+9PQ
+eYBRvK7GScuDQo2+DjEn4hUsnKDZw9o4y+xRat+ItUGKcvVCMW8Swod5
+-----END PRIVATE KEY-----
+```
 
-## Generate private-public key pair
+Here's an example of how the private key should look in C#:
 ```C#
-using System;
-using System.Linq;
-using System.Security.Cryptography;
+var privateKey = "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgzNTTnuXqcrI5uSEa"
+    + "V6REzZG7hU+TzRl0Phe56k9/gPWhRANCAAQwB42Sozmtci4mDjnegx003FBV+9PQ"
+    + "eYBRvK7GScuDQo2+DjEn4hUsnKDZw9o4y+xRat+ItUGKcvVCMW8Swod5";
+```
 
-namespace Target365KeyGen
-{
-    class Program
-    {
-        static void Main()
-        {
-            var keyParams = new CngKeyCreationParameters
-            {
-                ExportPolicy = CngExportPolicies.AllowPlaintextExport,
-                KeyUsage = CngKeyUsages.Decryption | CngKeyUsages.Signing
-            };
-
-            using (var cngKey = CngKey.Create(CngAlgorithm.ECDsaP256, null, keyParams))
-            using (var cng = new ECDsaCng(cngKey))
-            {
-                var privateKey = Convert.ToBase64String(cng.Key.Export(CngKeyBlobFormat.EccPrivateBlob));
-                var publicKeyBytes = cng.Key.Export(CngKeyBlobFormat.EccPublicBlob);
-                var derPublicKey = Convert.ToBase64String(CngEcPublicBlobToDerAns1(publicKeyBytes));
-
-                Console.WriteLine($".NET client private key:");
-                Console.WriteLine(privateKey);
-                Console.WriteLine();
-
-                Console.WriteLine($"Target365 public key:");
-                Console.WriteLine(derPublicKey);
-                Console.WriteLine();
-            }
-        }
-
-        public static byte[] CngEcPublicBlobToDerAns1(byte[] cngEcPublicBlob)
-        {
-            var secp256r1Prefix = Convert.FromBase64String("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE");
-            var rawKey = cngEcPublicBlob.Skip(8);
-            return secp256r1Prefix.Concat(rawKey).ToArray();
-        }
-    }
-}
-
+Use this openssl command to extract the public key:
+```
+openssl ec -in private.key -pubout -out public.key
+```
+You can then send us the `public.key` file. The file should look something like this:
+```
+-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEuVHnFqJxiBC9I5+8a8Sx66brBCz3
+Flt70WN9l7WZ8VQVN9DZt0kW5xpiO5aG7qd5K8OcHZeoJRprFJOkBwW4Fg==
+-----END PUBLIC KEY-----
 ```
 
 ### NuGet
