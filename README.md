@@ -10,7 +10,7 @@ You can generate your EC public/private key-pair using openssl like this:
 ```
 openssl ecparam -name prime256v1 -genkey -noout -out private.pem
 ```
-Use openssl to convert it to pk8 format which Node uses.
+Use openssl to convert it to pk8 format which the .NET SDK uses.
 ```
 openssl pkcs8 -topk8 -inform pem -in private.pem -outform pem -nocrypt -out private.key
 ```
