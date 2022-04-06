@@ -42,6 +42,8 @@ Flt70WN9l7WZ8VQVN9DZt0kW5xpiO5aG7qd5K8OcHZeoJRprFJOkBwW4Fg==
 -----END PUBLIC KEY-----
 ```
 
+For more details on using the SDK we strongly suggest you check out our [.NET User Guide](USERGUIDE.md).
+
 ### NuGet
 ```
 PM> Install-Package Target365.Sdk
