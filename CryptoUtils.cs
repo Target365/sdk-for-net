@@ -184,15 +184,15 @@ namespace Target365.Sdk
 
 		private static bool IsPemPrivateKey(byte[] privateKey)
 		{
-			return privateKey[0] == 0x30 && privateKey.Length == 165;
+			return privateKey[0] == 0x30 && privateKey.Length == 138;
 		}
 
 		public static byte[] PemPrivateKeyToCng(byte[] pemPrivateKey)
 		{
 			var prefix = new byte[] { 0x45, 0x43, 0x53, 0x32, 0x20, 0x00, 0x00, 0x00 };
 			var d = pemPrivateKey.Skip(36).Take(32);
-			var x = pemPrivateKey.Skip(36 + 32 + 18).Take(32);
-			var y = pemPrivateKey.Skip(36 + 32 + 18 + 32).Take(32);
+			var x = pemPrivateKey.Skip(36 + 32 + 6).Take(32);
+			var y = pemPrivateKey.Skip(36 + 32 + 6 + 32).Take(32);
 			return prefix.Concat(x).Concat(y).Concat(d).ToArray();
 		}
 
