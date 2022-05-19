@@ -16,7 +16,7 @@
     <Product>Target365 SDK</Product>
     <Description>.NET Library for Target365 Online Services</Description>
     <Copyright></Copyright>
-    <PackageReleaseNotes>Fixed support for pk8 PEM formatted private keys.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed support for pk8 PEM formatted private keys. Added Properties to DeliveryReport.</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>Target365.Sdk.snk</AssemblyOriginatorKeyFile>
