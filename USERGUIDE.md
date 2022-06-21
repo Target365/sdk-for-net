@@ -39,14 +39,11 @@ The Target365 SDK gives you direct access to our online services like sending an
 ### Target365Client
 ```C#
 using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
 using Target365.Sdk;
 
 var url = new Uri("https://shared.target365.io");
-var keyName = "YOUR_KEY";
-var privateKey = "BASE64_EC_PRIVATE_KEY";
+var keyName = "YOUR_KEY_NAME";
+var privateKey = "YOUR_BASE64_PRIVATE_KEY";
 var serviceClient = new Target365Client(url, keyName, privateKey); //Target365Client should be static singleton!
 ```
 ## Text messages
