@@ -10,6 +10,7 @@
     * [Schedule an SMS for later sending](#schedule-an-sms-for-later-sending)
     * [Edit a scheduled SMS](#edit-a-scheduled-sms)
     * [Delete a scheduled SMS](#delete-a-scheduled-sms)
+    * [Send batch](#send-batch)
 * [Payment transactions](#payment-transactions)
     * [Create a Strex payment transaction](#create-a-strex-payment-transaction)
     * [Create a Strex payment transaction with one-time password](#create-a-strex-payment-transaction-with-one-time-password)
@@ -104,6 +105,33 @@ This example deletes a previously created scheduled SMS.
 ```C#
 await serviceClient.DeleteOutMessageAsync(transactionId);
 ```
+### Send batch
+This example sends a batch of messages in one operation.
+Batches behave logically the same way as if you would send each message by itself and is offered only for performance reasons. Here are the limitations and restrictions when it comes to using batches:
+* You can have up to 10 000 messages per batch operation.
+* Each message in the batch must have a unique TransactionId, otherwise the operation will fail.
+* If one or more messages have errors (like invalid recipient etc.) only those messages will fail, the rest will be processed normally.
+* If you want a status per message you have to set the DeliveryReportUrl on each message.
+```C#
+var outMessage1 = new OutMessage
+{
+    TransactionId = Guid.NewGuid().ToString(),
+    Sender = "Target365",
+    Recipient = "+4798079008",
+    Content = "Hello World from SMS!",
+};
+
+var outMessage2 = new OutMessage
+{
+    TransactionId = Guid.NewGuid().ToString(),
+    Sender = "Target365",
+    Recipient = "+4798079008",
+    Content = "Hello again!",
+};
+
+await target365Client.CreateOutMessageBatchAsync(new[] {outMessage1, outMessage2});
+```
+
 ## Payment transactions
 If your service requires a minimum age of the End User, each payment transaction should be defined with minimum age. Both StrexTransaction and OutMessage have a property named “Age”. If not set or present in the request, there is no age limit.
 
