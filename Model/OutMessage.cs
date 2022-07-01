@@ -107,6 +107,12 @@ namespace Target365.Sdk
 		public string DetailedStatusCode { get; set; }
 
 		/// <summary>
+		/// Status description.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public string StatusDescription { get; set; }
+
+		/// <summary>
 		/// Whether message was delivered. Null if status is unknown.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]

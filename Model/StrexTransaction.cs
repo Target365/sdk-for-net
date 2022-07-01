@@ -71,6 +71,12 @@ namespace Target365.Sdk
 		public string DetailedStatusCode { get; set; }
 
 		/// <summary>
+		/// Status description.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public string StatusDescription { get; set; }
+
+		/// <summary>
 		/// Created time.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]

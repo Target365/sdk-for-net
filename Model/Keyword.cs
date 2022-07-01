@@ -41,6 +41,11 @@ namespace Target365.Sdk
 		public string ForwardUrl { get; set; }
 
 		/// <summary>
+		/// Preauth settings
+		/// </summary>
+		public PreAuthSettings PreAuthSettings { get; set; }
+
+		/// <summary>
 		/// Whether keyword is enabled.
 		/// </summary>
 		[DataMember(IsRequired = true)]
