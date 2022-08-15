@@ -7,8 +7,8 @@
 * [Text messages](#text-messages)
     * [Send an SMS](#send-an-sms)
     * [Set DeliveryReport URL for an SMS](#set-deliveryreport-url-for-an-sms)
-    * [Schedule an SMS for later sending](#schedule-an-sms-for-later-sending)
     * [Add tags to message](#add-tags-to-message)
+    * [Schedule an SMS for later sending](#schedule-an-sms-for-later-sending)
     * [Edit a scheduled SMS](#edit-a-scheduled-sms)
     * [Delete a scheduled SMS](#delete-a-scheduled-sms)
     * [Send batch](#send-batch)
@@ -78,21 +78,6 @@ var outMessage = new OutMessage
 await serviceClient.CreateOutMessageAsync(outMessage);
 ```
 
-### Schedule an SMS for later sending
-This example sets up a scheduled SMS. Scheduled messages can be updated or deleted before the time of sending.
-```C#
-var outMessage = new OutMessage
-{
-    TransactionId = Guid.NewGuid().ToString(),
-    Sender = "Target365",
-    Recipient = "+4798079008",
-    Content = "Hello World from SMS!",
-    SendTime = DateTimeOffset.UtcNow.AddHours(2),
-};
-
-await serviceClient.CreateOutMessageAsync(outMessage);
-```
-
 ### Add tags to message
 This example show how to add tags to a message that can be used for statistics and grouping. Hierachies can be created with /. In the future, tags may only contain a-z0-9. Urls are allowed as an exception, so that '//' doesn't make hierarchy.
 ```C#
@@ -104,6 +89,21 @@ var outMessage = new OutMessage
     Content = "Hello World from SMS!",
     SendTime = DateTimeOffset.UtcNow.AddHours(2),
     Tags = new[] { "tag1", "group/subgroup/tag2" }
+};
+
+await serviceClient.CreateOutMessageAsync(outMessage);
+```
+
+### Schedule an SMS for later sending
+This example sets up a scheduled SMS. Scheduled messages can be updated or deleted before the time of sending.
+```C#
+var outMessage = new OutMessage
+{
+    TransactionId = Guid.NewGuid().ToString(),
+    Sender = "Target365",
+    Recipient = "+4798079008",
+    Content = "Hello World from SMS!",
+    SendTime = DateTimeOffset.UtcNow.AddHours(2),
 };
 
 await serviceClient.CreateOutMessageAsync(outMessage);
