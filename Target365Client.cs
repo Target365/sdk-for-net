@@ -732,6 +732,51 @@ namespace Target365.Sdk
 		}
 
 		/// <summary>
+		/// Sends pin code to user for verification.
+		/// </summary>
+		/// <param name="pincode">Pin code object.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		public async Task SendPinCodeAsync(Pincode pincode, CancellationToken cancellationToken = default)
+		{
+			if (pincode == null) throw new ArgumentNullException(nameof(pincode));
+
+			var content = new StringContent(Serialize(pincode), Encoding.UTF8, "application/json");
+			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/pincodes"))
+			{
+				Content = content
+			};
+
+			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+		}
+
+		/// <summary>
+		/// Verify pin code sent to user.
+		/// </summary>
+		/// <param name="transactionId">TransactionId used when creating pincode.</param>
+		/// <param name="pincode">Pin code to check.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		public async Task<bool> VerifyPinCodeAsync(string transactionId, string pincode, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrEmpty(transactionId)) throw new ArgumentException("transactionId cannot be null or empty string.");
+			if (string.IsNullOrEmpty(pincode)) throw new ArgumentException("pincode cannot be null or empty string.");
+
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/pincodes/verification"
+				+ $"?transactionId={transactionId}&pincode={pincode}"));
+
+			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+
+			return Deserialize<bool>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+		}
+
+		/// <summary>
 		/// Gets server public key used for signing outgoing http requests like delivery reports and in-messages.
 		/// </summary>
 		/// <param name="keyName">Key name.</param>
