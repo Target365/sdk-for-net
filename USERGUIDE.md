@@ -31,6 +31,9 @@
     * [DLR forward](#dlr-forward)
     * [DLR forward using the SDK](#dlr-forward-using-the-sdk)
     * [DLR status codes](#dlr-status-codes)
+* [Pincodes](#pincodes)
+    * [Send pincode](#send-pincode)
+    * [Verify pincode](#verify-pincode)
 * [Encoding and SMS length](#encoding-and-sms-length)
 
 ## Introduction
@@ -447,6 +450,31 @@ Delivery reports contains two status codes, one overall called `StatusCode` and 
 |TimeoutError|Timeout error|
 |Stopped|Message is part of more than 100 identical messages in an hour and stopped, assuming it is part of an eternal loop|
 |OtherError|Miscellaneous. Errors not covered by statuses above|
+
+## Pincodes
+
+### Send pincode
+This example shows how to send pincodes to users and verify their input to validate their phonenumbers.
+#### Request
+```
+var pincode = new Pincode
+{
+    TransactionId = Guid.NewGuid().ToString(),
+    Sender = "Target365",
+    Recipient = "+4798079008",
+    "PrefixText": "Din pinkode er ",
+    "SuffixText": " for å logge inn på acme.inc"
+};
+
+await serviceClient.SendPinCodeAsync(pincode);
+```
+
+### Verify pincode
+This example shows how to verify the pincode sent in the previous step and entered on a web page by the user. Use the TransactionId provided in the previous step.
+#### Request
+```
+bool success = await serviceClient.VerifyPinCodeAsync(pincode.TransactionId, pin);
+```
 
 ## Encoding and SMS length
 When sending SMS messages, we'll automatically send messages in the most compact encoding possible. If you include any non GSM-7 characters in your message body, we will automatically fall back to UCS-2 encoding (which will limit message bodies to 70 characters each).
