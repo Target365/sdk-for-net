@@ -462,8 +462,8 @@ var pincode = new Pincode
     TransactionId = Guid.NewGuid().ToString(),
     Sender = "Target365",
     Recipient = "+4798079008",
-    "PrefixText": "Din pinkode er ",
-    "SuffixText": " for å logge inn på acme.inc"
+    PrefixText" = "Your pincode is ",
+    SuffixText" = " to log on to acme.inc"
 };
 
 await serviceClient.SendPinCodeAsync(pincode);
