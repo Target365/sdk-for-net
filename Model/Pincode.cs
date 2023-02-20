@@ -37,5 +37,11 @@ namespace Target365.Sdk
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public string SuffixText { get; set; }
-	}
+
+        /// <summary>
+        /// Length of pincode, 4-6 digits (optional).
+        /// </summary>
+        [DataMember(EmitDefaultValue = false)]
+        public int? PincodeLength { get; set; } = 4;
+    }
 }
