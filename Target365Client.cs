@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Reflection;
 
 namespace Target365.Sdk
 {
@@ -70,6 +71,8 @@ namespace Target365.Sdk
 			_httpClient.BaseAddress = baseUrl;
 			_httpClient.DefaultRequestHeaders.Accept.Clear();
 			_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+			_httpClient.DefaultRequestHeaders.Add("X-Sdk", ".NET");
+			_httpClient.DefaultRequestHeaders.Add("X-Sdk-Version", "" + Assembly.GetExecutingAssembly().GetName().Version);
 			_httpClient.Timeout = httpTimeout.Value;
 
 			_jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
