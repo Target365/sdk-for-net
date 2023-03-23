@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Target365.Sdk
 {
@@ -43,5 +44,11 @@ namespace Target365.Sdk
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public int? PincodeLength { get; set; } = 4;
+
+		/// <summary>
+		/// Tags associated with the generated out-message. Can be used for statistics and grouping.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public ICollection<string> Tags { get; set; } = new HashSet<string>();
 	}
 }
