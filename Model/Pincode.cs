@@ -46,6 +46,12 @@ namespace Target365.Sdk
 		public int? PincodeLength { get; set; } = 4;
 
 		/// <summary>
+		/// Max attempts, 1-5 (3 is default).
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public int? MaxAttempts { get; set; } = 3;
+
+		/// <summary>
 		/// Tags associated with the generated out-message. Can be used for statistics and grouping.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
