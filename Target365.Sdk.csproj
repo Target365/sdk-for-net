@@ -16,7 +16,7 @@
     <Product>Target365 SDK</Product>
     <Description>.NET Library for Target365 Online Services</Description>
     <Copyright></Copyright>
-    <PackageReleaseNotes>Added Tags property to Pincode.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added MaxAttempts and VerificationMode property to Pincode.</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>Target365.Sdk.snk</AssemblyOriginatorKeyFile>
