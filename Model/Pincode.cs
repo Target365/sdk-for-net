@@ -52,6 +52,12 @@ namespace Target365.Sdk
 		public int? MaxAttempts { get; set; } = 3;
 
 		/// <summary>
+		/// Verification mode. AtLeastOnce is default and allows for idempotent verification. AtMostOnce only allows for exactly one verification.
+		/// </summary>
+		[DataMember]
+		public DeliveryModes VerificationMode { get; set; } = DeliveryModes.AtLeastOnce;
+
+		/// <summary>
 		/// Tags associated with the generated out-message. Can be used for statistics and grouping.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
