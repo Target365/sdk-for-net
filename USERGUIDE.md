@@ -36,6 +36,10 @@
     * [Verify pincode](#verify-pincode)
 * [Encoding and SMS length](#encoding-and-sms-length)
     * [Automatic character replacements](#automatic-character-replacements)
+* [Pre-authorization](#pre-authorization)
+   * [Pre-authorization via keyword](#pre-authorization-via-keyword)
+   * [Pre-authorization via API](#pre-authorization-via-api)
+   * [Rebilling with pre-authorization](#rebilling-with-pre-authorization)
 * [Testing](#testing)
     * [Fake numbers](#fake-numbers)
 
@@ -153,7 +157,7 @@ var outMessage2 = new OutMessage
     Content = "Hello again!",
 };
 
-await target365Client.CreateOutMessageBatchAsync(new[] {outMessage1, outMessage2});
+await serviceClient.CreateOutMessageBatchAsync(new[] {outMessage1, outMessage2});
 ```
 
 ## Payment transactions
@@ -192,7 +196,7 @@ var oneTimePassword = new OneTimePassword
     MerchantId = "YOUR_MERCHANT_ID",
     Recipient = "+4798079008",
     MessagePrefix = "Dear customer...",
-    MessageSuffix = "Best Regards..."
+    MessageSuffix = "Best Regards...",
     Recurring = false
 };
 
@@ -332,7 +336,7 @@ await serviceClient.DeleteKeywordAsync(keywordId);
 ### SMS forward
 This example shows how SMS messages are forwarded to the keywords ForwardUrl. All sms forwards expects a response with status code 200 (OK). If the request times out or response status code differs the forward will be retried several times.
 #### Request
-```
+```http
 POST https://your-site.net/api/receive-sms HTTP/1.1
 Content-Type: application/json
 Host: your-site.net
@@ -347,7 +351,7 @@ Host: your-site.net
 ```
 
 #### Response
-```
+```http
 HTTP/1.1 200 OK
 Date: Thu, 07 Feb 2019 21:13:51 GMT
 Content-Length: 0
@@ -372,7 +376,7 @@ public async Task<HttpResponseMessage> PostInMessage(HttpRequestMessage request)
 ### DLR forward
 This example shows how delivery reports (DLR) are forwarded to the outmessage DeliveryReportUrl. All DLR forwards expect a response with status code 200 (OK). If the request times out or response status code differs the forward will be retried 10 times with exponentially longer intervals for about 15 hours.
 #### Request
-```
+```http
 POST https://your-site.net/api/receive-dlr HTTP/1.1
 Content-Type: application/json
 Host: your-site.net
@@ -394,7 +398,7 @@ Host: your-site.net
 ```
 
 #### Response
-```
+```http
 HTTP/1.1 200 OK
 Date: Thu, 07 Feb 2019 21:13:51 GMT
 Content-Length: 0
@@ -529,6 +533,121 @@ Unless you spesifically set the AllowUnicode property to true, we will automatic
 |\uFEFF|(regular space)|
 
 *Please note that we might remove or add Unicode characters that are automatically replaced. This is an "best effort" to save on SMS costs!*
+
+## Pre-authorization
+Some Strex service codes require recurring billing to be authorized by the user via a confirmation sms or sms pincode.
+This can be achieved either via direct API calls or setting it up to be handled automatically via a keyword.
+
+### Pre-authorization via keyword
+Automatic pre-authorization can be activated on a keyword by either activating it in the
+PreAuth section of the keyword in Strex Connect or via the SDK
+
+```C#
+var keyword = new Keyword
+{
+    ShortNumberId = "NO-2002",
+    KeywordText = "HELLO",
+    Mode = "Text",
+    ForwardUrl = "https://your-site.net/api/receive-sms",
+    Enabled = true,
+    PreAuthSettings = new PreAuthSettings
+    {
+        Active = true,
+        InfoText = "Info message sent before preauth message",
+        InfoSender = "2002",
+        PrefixMessage = "Text inserted before preauth text",
+        PostfixMessage = "Text inserted after preauth text",
+        Delay = delayMins,
+        MerchantId = "Your merchant id",
+        ServiceDescription = "Service description"
+    }
+};
+
+await serviceClient.CreateKeywordAsync(keyword);
+```
+
+In-messages forwarded to you will then look like this:
+```http
+POST https://your-site.net/api/receive-sms HTTP/1.1
+Content-Type: application/json
+
+{
+  "transactionId":"00568c6b-7baf-4869-b083-d22afc163059",
+  "created": "2021-12-06T09:50:00+00:00",
+  "keywordId": "12345678",
+  "sender":"+4798079008",
+  "recipient":"2002",
+  "content": "HELLO",
+  "properties": {
+    "ServiceId": "1234",
+    "preAuthorization": true
+  }
+}
+```
+If PreAuthorization was not successfully performed, "preAuthorization" will be "false".
+
+The new properties are ServiceId and preAuthorization. ServiceId must be added to the outmessage/transaction when doing rebilling in the "preAuthServiceId" field. 
+The ServiceId is always the same for one keyword. Incoming messages forwarded with "preAuthorization" set as "false" are not possible
+to bill via Strex Payment.
+
+### Pre-authorization via API
+Pre-authorization via API can be used with either SMS confirmation or OTP (one-time-passord). SMS confirmation is used by default if OneTimePassword isn't used.
+PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page.
+
+Example using OTP-flow:
+```C#
+var transactionId = "your-unique-id";
+
+var oneTimePassword = new OneTimePassword
+{
+    TransactionId = transactionId,
+    MerchantId = "your-merchant-id",
+    Recipient = "+4798079008",
+    MessagePrefix = "Dear customer...",
+    MessageSuffix = "Best Regards...",			
+    Recurring = true,
+};
+
+await serviceClient.CreateOneTimePasswordAsync(oneTimePassword);
+
+// *** Get input from end user (eg. via web site) ***
+
+var transaction = new StrexTransaction
+{
+    TransactionId = transactionId,
+    ShortNumber = "2002",
+    Recipient = "+4798079008",
+    MerchantId = "your-merchant-id",
+    Age = 18,
+    Price = 10,
+    ServiceCode = ServiceCodes.NonCommercialDonation,
+    PreAuthServiceId = "your-service-id",
+    PreAuthServiceDescription = "your-subscription-description",
+    InvoiceText = "Donation test",
+    OneTimePassword = "code_from_end_user"
+};
+
+await serviceClient.CreateStrexTransactionAsync(transaction);
+```
+
+### Rebilling with pre-authorization:
+```C#
+var transaction = new StrexTransaction
+{
+    TransactionId = "your-unique-id",
+    ShortNumber = "2002",
+    Recipient = "+4798079008",
+    Content = "your-sms-text-to-end-user",
+    MerchantId = "your-merchant-id",
+    Age = 18,
+    Price = 10,
+    ServiceCode = ServiceCodes.NonCommercialDonation,
+    PreAuthServiceId = "your-service-id",
+    InvoiceText = "Donation test",
+};
+
+await serviceClient.CreateStrexTransactionAsync(transaction);
+```
 
 ## Testing
 
