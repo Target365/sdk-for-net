@@ -98,7 +98,7 @@ var outMessage = new OutMessage
     Recipient = "+4798079008",
     Content = "Hello World from SMS!",
     SendTime = DateTimeOffset.UtcNow.AddHours(2),
-    Tags = new[] { "tag1", "group/subgroup/tag2" }
+    Tags = new[] { "tag1", "grouping:group/subgroup/tag2" }
 };
 
 await serviceClient.CreateOutMessageAsync(outMessage);
