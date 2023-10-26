@@ -713,16 +713,16 @@ namespace Target365.Sdk
 		}
 
 		/// <summary>
-		/// Gets Strex user validity.
+		/// Gets Strex user info.
 		/// </summary>
 		/// <param name="recipient">Recipient msisdn.</param>
 		/// <param name="merchantId">MerchantId (optional).</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<StrexUserValidity> GetStrexValidityAsync(string recipient, string merchantId, CancellationToken cancellationToken = default)
+		public async Task<StrexUserInfo> GetStrexUserInfoAsync(string recipient, string merchantId, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(recipient)) throw new ArgumentException("recipient cannot be null or empty string.");
 
-			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/validity?recipient={WebUtility.UrlEncode(recipient)}"
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/userinfo?recipient={WebUtility.UrlEncode(recipient)}"
 				+ (string.IsNullOrEmpty(merchantId) ? "" : $"&merchantId={merchantId}")));
 
 			await SignRequest(request).ConfigureAwait(false);
@@ -731,7 +731,55 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return Deserialize<StrexUserValidity>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+			return Deserialize<StrexUserInfo>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+		}
+
+		/// <summary>
+		/// Gets Strex user info V2.
+		/// </summary>
+		/// <param name="recipient">Recipient msisdn.</param>
+		/// <param name="merchantId">MerchantId (optional).</param>
+		/// <param name="serviceCode">Service code</param>
+		/// <param name="price">Price in kr.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		public async Task<StrexUserInfoV2> GetStrexInfoV2Async(string recipient, string merchantId, string serviceCode, decimal price, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrEmpty(recipient)) throw new ArgumentException("recipient cannot be null or empty string.");
+			if (string.IsNullOrEmpty(serviceCode)) throw new ArgumentException("serviceCode cannot be null or empty string.");
+			if (price <= 0) throw new ArgumentException("price cannot be 0 or negative.");
+
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/userinfo-v2?recipient={WebUtility.UrlEncode(recipient)}&serviceCode={serviceCode}&price={price}"
+				+ (string.IsNullOrEmpty(merchantId) ? "" : $"&merchantId={merchantId}")));
+
+			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+
+			return Deserialize<StrexUserInfoV2>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+		}
+
+		/// <summary>
+		/// Gets Strex user info V3.
+		/// </summary>
+		/// <param name="recipient">Recipient msisdn.</param>
+		/// <param name="merchantId">MerchantId (optional).</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		public async Task<StrexUserInfoV3> GetStrexInfoV3Async(string recipient, string merchantId, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrEmpty(recipient)) throw new ArgumentException("recipient cannot be null or empty string.");
+
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/userinfo-v3?recipient={WebUtility.UrlEncode(recipient)}"
+				+ (string.IsNullOrEmpty(merchantId) ? "" : $"&merchantId={merchantId}")));
+
+			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+
+			return Deserialize<StrexUserInfoV3>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 		}
 
 		/// <summary>

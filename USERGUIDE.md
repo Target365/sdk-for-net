@@ -17,6 +17,7 @@
     * [Create a Strex payment transaction with one-time password](#create-a-strex-payment-transaction-with-one-time-password)
     * [Reverse a Strex payment transaction](#reverse-a-strex-payment-transaction)
     * [Check status on Strex payment transaction](#check-status-on-strex-payment-transaction)
+    * [Check user information](#check-user-information)
 * [One-click](#one-click)
     * [One-click config](#one-click-config)
     * [Recurring transaction](#recurring-transaction)
@@ -231,6 +232,91 @@ This example gets a previously created Strex transaction to check its status. Th
 var transaction = await serviceClient.GetStrexTransactionAsync(transactionId);
 var statusCode = transaction.StatusCode;
 var isBilled = transaction.Billed == true;
+```
+
+### Check user information
+Get information about the user at Strex.
+
+#### GetUserInfoV1
+```C#
+var userInfo = await serviceClient.GetStrexUserInfoAsync(recipient, merchantId);
+```
+Checks if an end user is registered with Strex.
+
+The end user must be registered to be able to make licensed purchases (physical goods or amounts above a certain amount).
+
+Only registered end users can add a payment card as a means of payment.
+
+Possible return values are:
+• Unregistered
+• Partial
+• Full
+• FullviaBankID
+• Barred
+
+#### GetUserInfoV2
+```C#
+var userInfoV2 = await serviceClient.GetStrexUserInfoV2Async(recipient, merchantId, serviceCode, price);
+```
+
+Checks whether a transaction can be charged to the end user based on input (amount and service code).
+
+NB! Gives only an indication of the result of sell with the same input. No charge is done against MNO.
+
+The response will be 'OK' or an error message that provides information about why the customer cannot be charged (e.g. CPA block, customer registration required).
+
+Example response:
+```C#
+{
+  "result": "0",
+  "resultDescription": ""
+}
+```
+
+#### GetUserInfoV3
+```C#
+var userInfoV3 = await serviceClient.GetStrexUserInfoV3Async(recipient, merchantId);
+```
+
+Retrieves the end user's amount limits from Strex at the time the request arrives.
+The amount limits depend on the customer's registration level with Strex and age (over / under 18 year).
+• Single transaction
+• Aggregated monthly
+• Aggregated annually
+
+Also provides information on whether the subscription is postpaid or prepaid and end user preferred payment method (MNO invoice or payment card).
+
+Prepaid balance and content amount limits with MNO is checked for selected merchants.
+
+Balance on payment card is not checked.
+
+Response info:
+```C#
+{
+	result	string	Result of charge check - 0 = OK
+
+	preferred_sof	string	Subscriber preferred source of funds: 1 - MNO bill, 2 – (not in use), 3 – payment card
+
+	postpaid_or_prepaid	string	Subscriber MNO subscription type: 'prepaid' or 'postpaid'
+
+	limit_trans	string	Maximum amount (In øre) which can be charged in a single sell transaction
+
+	remainder_month	string	Remaining monthly amount (in øre) which can be charged the subscriber before exceeding the monthly limit. '0' - limit already reached
+
+	Remainder_year	string	Remaining yearly amount (in øre) which can be charged the subscriber before exceeding the yearly limit. '0' - limit already reached, '-1' - no limit applicable, subscriber valid for purchases above defined yearly limit
+}
+```
+
+Example response:
+```C#
+{
+  "result": "0",
+  "preferred_sof": "1",
+  "postpaid_or_prepaid": "postpaid",
+  "limit_trans": "100000",
+  "remainder_month": "43600",
+  "remainder_year": "-1"
+}
 ```
 
 ## One-click

@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Strex user validity values.
 	/// </summary>
-	public enum StrexUserValidity
+	public enum StrexUserInfo
 	{
 		/// <summary>
 		/// Not registered (0)
