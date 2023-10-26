@@ -23,6 +23,7 @@
     * [Recurring transaction](#recurring-transaction)
 * [Lookup](#lookup)
     * [Address lookup for mobile number](#address-lookup-for-mobile-number)
+    * [Address lookup for freetext](#address-lookup-for-freetext)
 * [Keywords](#keywords)
     * [Create a keyword](#create-a-keyword)
     * [Delete a keyword](#delete-a-keyword)
@@ -392,6 +393,12 @@ This example looks up address information for the mobile number 98079008. Lookup
 var lookup = await serviceClient.LookupAsync("+4798079008");
 var firstName = lookup.FirstName;
 var lastName = lookup.LastName;
+```
+
+### Address lookup for freetext
+This example looks up address information for a name. Lookup information includes registered phone number, name and address. An array of results will be returned, since your search can match several records.
+```C#
+var lookupArray = await serviceClient.LookupFreeTextAsync("Hans Olav Stjernholm");
 ```
 
 ## Keywords

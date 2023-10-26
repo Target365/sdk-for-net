@@ -165,6 +165,28 @@ namespace Target365.Sdk
 		}
 
 		/// <summary>
+		/// Looks up address info from free text (name, address...).
+		/// </summary>
+		/// <param name="freeText">Free text like name or address.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		public async Task<Lookup[]> LookupFreeTextAsync(string freeText, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrEmpty(freeText)) throw new ArgumentException("freeText cannot be null or empty string.");
+
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/lookup/freetext?input={WebUtility.UrlEncode(freeText)}"));
+			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return null;
+
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+
+			return Deserialize<Lookup[]>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+		}
+
+		/// <summary>
 		/// Creates a new keyword.
 		/// </summary>
 		/// <param name="keyword">Keyword object.</param>
