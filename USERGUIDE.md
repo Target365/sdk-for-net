@@ -17,7 +17,7 @@
     * [Create a Strex payment transaction with one-time password](#create-a-strex-payment-transaction-with-one-time-password)
     * [Reverse a Strex payment transaction](#reverse-a-strex-payment-transaction)
     * [Check status on Strex payment transaction](#check-status-on-strex-payment-transaction)
-    * [Check user information](#check-user-information)
+    * [Check Strex user information](#check-strex-user-information)
 * [One-click](#one-click)
     * [One-click config](#one-click-config)
     * [Recurring transaction](#recurring-transaction)
@@ -234,7 +234,7 @@ var statusCode = transaction.StatusCode;
 var isBilled = transaction.Billed == true;
 ```
 
-### Check user information
+### Check Strex user information
 Get information about the user at Strex.
 
 #### GetUserInfoV1
@@ -248,11 +248,11 @@ The end user must be registered to be able to make licensed purchases (physical 
 Only registered end users can add a payment card as a means of payment.
 
 Possible return values are:
-• Unregistered
-• Partial
-• Full
-• FullviaBankID
-• Barred
+* Unregistered
+* Partial
+* Full
+* FullviaBankID
+* Barred
 
 #### GetUserInfoV2
 ```C#
@@ -280,9 +280,9 @@ var userInfoV3 = await serviceClient.GetStrexUserInfoV3Async(recipient, merchant
 
 Retrieves the end user's amount limits from Strex at the time the request arrives.
 The amount limits depend on the customer's registration level with Strex and age (over / under 18 year).
-• Single transaction
-• Aggregated monthly
-• Aggregated annually
+* Single transaction
+* Aggregated monthly
+* Aggregated annually
 
 Also provides information on whether the subscription is postpaid or prepaid and end user preferred payment method (MNO invoice or payment card).
 
