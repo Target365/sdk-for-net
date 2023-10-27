@@ -86,7 +86,7 @@ namespace Target365.Sdk
 		/// <param name="serviceCode">Service code.</param>
 		/// <param name="price">Price in kr.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		Task<StrexUserInfoV2> GetStrexInfoV2Async(string recipient, string merchantId, string serviceCode, decimal price, CancellationToken cancellationToken = default);
+		Task<StrexUserInfoV2> GetStrexUserInfoV2Async(string recipient, string merchantId, string serviceCode, decimal price, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Gets Strex user info V3.
@@ -94,7 +94,7 @@ namespace Target365.Sdk
 		/// <param name="recipient">Recipient msisdn.</param>
 		/// <param name="merchantId">MerchantId (optional).</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		Task<StrexUserInfoV3> GetStrexInfoV3Async(string recipient, string merchantId, CancellationToken cancellationToken = default);
+		Task<StrexUserInfoV3> GetStrexUserInfoV3Async(string recipient, string merchantId, CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Gets a one-click config.

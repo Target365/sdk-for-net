@@ -764,7 +764,7 @@ namespace Target365.Sdk
 		/// <param name="serviceCode">Service code</param>
 		/// <param name="price">Price in kr.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<StrexUserInfoV2> GetStrexInfoV2Async(string recipient, string merchantId, string serviceCode, decimal price, CancellationToken cancellationToken = default)
+		public async Task<StrexUserInfoV2> GetStrexUserInfoV2Async(string recipient, string merchantId, string serviceCode, decimal price, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(recipient)) throw new ArgumentException("recipient cannot be null or empty string.");
 			if (string.IsNullOrEmpty(serviceCode)) throw new ArgumentException("serviceCode cannot be null or empty string.");
@@ -788,7 +788,7 @@ namespace Target365.Sdk
 		/// <param name="recipient">Recipient msisdn.</param>
 		/// <param name="merchantId">MerchantId (optional).</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task<StrexUserInfoV3> GetStrexInfoV3Async(string recipient, string merchantId, CancellationToken cancellationToken = default)
+		public async Task<StrexUserInfoV3> GetStrexUserInfoV3Async(string recipient, string merchantId, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(recipient)) throw new ArgumentException("recipient cannot be null or empty string.");
 
