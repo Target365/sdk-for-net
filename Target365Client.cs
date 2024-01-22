@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Target365.Sdk
 {
@@ -20,19 +21,20 @@ namespace Target365.Sdk
 	/// </summary>
 	public class Target365Client : ILookupClient, IKeywordClient, IInMessageClient, IOutMessageClient, IStrexClient, IPublicKeysClient, IVerificationClient, IDisposable
 	{
-		private static readonly Lazy<HttpClient> _staticHttpClient = new Lazy<HttpClient>(CreateHttpClient, true);
-		private static readonly Dictionary<string, PublicKey> _publicKeys = new Dictionary<string, PublicKey>();
+		private static readonly Lazy<HttpClient> _staticHttpClient = new(CreateHttpClient, true);
+		private static readonly Dictionary<string, PublicKey> _publicKeys = new();
 		private readonly HttpClient _httpClient;
 		private readonly string _keyName;
 		private readonly byte[] _cngPrivateKeyBytes;
 		private readonly JsonSerializerOptions _jsonSerializerOptions;
+
 		/// <summary>
 		/// Minimum HTTP timeout.
 		/// </summary>
 		public static TimeSpan MinimumHttpTimeout = TimeSpan.FromSeconds(10);
 
 		/// <summary>
-		/// ServiceClient constructor.
+		/// Initializes a new Target365Client.
 		/// </summary>
 		/// <param name="baseUrl">Base url - provided by Target365.</param>
 		/// <param name="keyName">Key name registered as a public key with Target365.</param>
@@ -57,7 +59,7 @@ namespace Target365.Sdk
 
 			_keyName = keyName;
 			_cngPrivateKeyBytes = Convert.FromBase64String(privateKey);
-			
+
 			try
 			{
 				using var ecdsa = CryptoUtils.GetEcdsaFromPrivateKey(_cngPrivateKeyBytes);
@@ -110,7 +112,7 @@ namespace Target365.Sdk
 		/// Casts this service client as IRequestVerifier.
 		/// </summary>
 		public IVerificationClient AsRequestVerifier() { return this; }
-		
+
 		/// <summary>
 		/// Pings the service and returns a hello message.
 		/// </summary>
@@ -991,7 +993,7 @@ namespace Target365.Sdk
 				using var ecdsa = CryptoUtils.GetEcdsaFromPemPublicKey(Convert.FromBase64String(publicKey.PublicKeyString));
 				using var sha = SHA256.Create();
 				var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(message));
-				
+
 				if (!ecdsa.VerifyHash(hash, signatureBytes))
 					throw new UnauthorizedAccessException("Incorrect signature parameter in request.");
 			}
