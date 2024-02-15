@@ -582,7 +582,8 @@ var pincode = new Pincode
     Sender = "Target365",
     Recipient = "+4798079008",
     PrefixText" = "Your pincode is ",
-    SuffixText" = " to log on to acme.inc"
+    SuffixText" = " to log on to acme.inc",
+    MaxAttempts = 3,
 };
 
 await serviceClient.SendPinCodeAsync(pincode);
