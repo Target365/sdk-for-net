@@ -29,6 +29,12 @@ namespace Target365.Sdk
 		public string CorrelationId { get; set; }
 
 		/// <summary>
+		/// Keyword id associated with transaction. Can be null.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public string KeywordId { get; set; }
+
+		/// <summary>
 		/// Short number.
 		/// </summary>
 		[DataMember(IsRequired = true)]
