@@ -41,7 +41,8 @@
     * [Automatic character replacements](#automatic-character-replacements)
 * [Pre-authorization](#pre-authorization)
    * [Pre-authorization via keyword](#pre-authorization-via-keyword)
-   * [Pre-authorization via API](#pre-authorization-via-api)
+   * [Pre-authorization via API with SMS](#pre-authorization-via-api-with-sms)
+   * [Pre-authorization via API with OTP](#pre-authorization-via-api-with-otp)
    * [Rebilling with pre-authorization](#rebilling-with-pre-authorization)
 * [Testing](#testing)
     * [Fake numbers](#fake-numbers)
@@ -693,11 +694,34 @@ The new properties are ServiceId and preAuthorization. ServiceId must be added t
 The ServiceId is always the same for one keyword. Incoming messages forwarded with "preAuthorization" set as "false" are not possible
 to bill via Strex Payment.
 
-### Pre-authorization via API
-Pre-authorization via API can be used with either SMS confirmation or OTP (one-time-passord). SMS confirmation is used by default if OneTimePassword isn't used.
-PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page.
+### Pre-authorization via API with SMS
+Pre-authorization via API can be used with SMS confirmation.
+PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page. Here's an example:
 
-Example using OTP-flow:
+```C#
+var transactionId = "your-unique-id";
+
+var transaction = new StrexTransaction
+{
+    TransactionId = transactionId,
+    ShortNumber = "2002",
+    Recipient = "+4798079008",
+    MerchantId = "your-merchant-id",
+    Age = 18,
+    Price = 10,
+    ServiceCode = ServiceCodes.NonCommercialDonation,
+    PreAuthServiceId = "your-service-id",
+    PreAuthServiceDescription = "your-subscription-description",
+    InvoiceText = "Donation test"
+};
+
+await serviceClient.CreateStrexTransactionAsync(transaction);
+```
+
+### Pre-authorization via API with OTP
+Pre-authorization via API can be used with OTP (one-time-passord).
+PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page. Here's an example:
+
 ```C#
 var transactionId = "your-unique-id";
 
