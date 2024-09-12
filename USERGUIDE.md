@@ -590,6 +590,8 @@ var pincode = new Pincode
 await serviceClient.SendPinCodeAsync(pincode);
 ```
 
+PrefixText, SuffixText and PincodeLength are optional. If specified, PincodeLength must be between 4 and 6. MaxAttempts must be between 1 and 5.
+
 ### Verify pincode
 This example shows how to verify the pincode sent in the previous step and entered on a web page by the user. Use the TransactionId provided in the previous step.
 #### Request
