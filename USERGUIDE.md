@@ -176,7 +176,7 @@ If your service requires a minimum age of the End User, each payment transaction
 
 ### Create a Strex payment transaction
 This example creates a 1 NOK Strex payment transaction that the end user will confirm by replying "OK" to an SMS from Strex.
-You can use message_prefix and message_suffix custom properties to influence the start and end of the SMS sent by Strex.
+
 ```C#
 var transaction = new StrexTransaction
 {
@@ -189,9 +189,6 @@ var transaction = new StrexTransaction
     InvoiceText = "Donation test",
     SmsConfirmation = true,
 };
-
-transaction.Properties["message_prefix"] = "Dear customer...";
-transaction.Properties["message_suffix"] = "Best regards...";
 
 await serviceClient.CreateStrexTransactionAsync(transaction);
 ```
@@ -698,7 +695,8 @@ to bill via Strex Payment.
 
 ### Pre-authorization via API with SMS
 Pre-authorization via API can be used with SMS confirmation.
-PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page. Here's an example:
+PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page. You can use message_prefix and message_suffix custom properties to influence the start and end of the SMS confirmation sent by Strex.
+Here's an example:
 
 ```C#
 var transactionId = "your-unique-id";
@@ -716,6 +714,9 @@ var transaction = new StrexTransaction
     PreAuthServiceDescription = "your-subscription-description",
     InvoiceText = "Donation test"
 };
+
+transaction.Properties["message_prefix"] = "Dear customer...";
+transaction.Properties["message_suffix"] = "Best regards...";
 
 await serviceClient.CreateStrexTransactionAsync(transaction);
 ```
