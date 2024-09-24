@@ -16,7 +16,7 @@
     <Product>Target365 SDK</Product>
     <Description>.NET Library for Target365 Online Services</Description>
     <Copyright></Copyright>
-    <PackageReleaseNotes>Added KeywordId to StrexTransaction.</PackageReleaseNotes>
+    <PackageReleaseNotes>Upgraded System.Text.Json nuget package reference.</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>Target365.Sdk.snk</AssemblyOriginatorKeyFile>
