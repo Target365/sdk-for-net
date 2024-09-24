@@ -10,7 +10,7 @@
   <PropertyGroup>
     <TargetFrameworks>net461;netstandard2.1</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.8.10</Version>
+    <Version>1.8.11</Version>
     <Authors>Target365</Authors>
     <Company>Target365</Company>
     <Product>Target365 SDK</Product>
@@ -27,8 +27,8 @@
     <RepositoryUrl>https://github.com/Target365/sdk-for-net</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>target365_nuget_logo.png</PackageIcon>
-    <AssemblyVersion>1.8.10.0</AssemblyVersion>
-    <FileVersion>1.8.10.0</FileVersion>
+    <AssemblyVersion>1.8.11.0</AssemblyVersion>
+    <FileVersion>1.8.11.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -69,6 +69,7 @@
   <ItemGroup>
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
     <PackageReference Include="System.Security.Cryptography.Cng" Version="4.7.0" />
-    <PackageReference Include="System.Text.Json" Version="5.0.0" />
-  </ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="6.0.9" Condition="'$(TargetFramework)' == 'net461'" />
+		<PackageReference Include="System.Text.Json" Version="8.0.4" Condition="'$(TargetFramework)' == 'netstandard2.1'" />
+	</ItemGroup>
 </Project>
