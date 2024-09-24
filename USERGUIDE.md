@@ -41,7 +41,8 @@
     * [Automatic character replacements](#automatic-character-replacements)
 * [Pre-authorization](#pre-authorization)
    * [Pre-authorization via keyword](#pre-authorization-via-keyword)
-   * [Pre-authorization via API](#pre-authorization-via-api)
+   * [Pre-authorization via API with SMS](#pre-authorization-via-api-with-sms)
+   * [Pre-authorization via API with OTP](#pre-authorization-via-api-with-otp)
    * [Rebilling with pre-authorization](#rebilling-with-pre-authorization)
 * [Testing](#testing)
     * [Fake numbers](#fake-numbers)
@@ -175,7 +176,7 @@ If your service requires a minimum age of the End User, each payment transaction
 
 ### Create a Strex payment transaction
 This example creates a 1 NOK Strex payment transaction that the end user will confirm by replying "OK" to an SMS from Strex.
-You can use message_prefix and message_suffix custom properties to influence the start and end of the SMS sent by Strex.
+
 ```C#
 var transaction = new StrexTransaction
 {
@@ -188,9 +189,6 @@ var transaction = new StrexTransaction
     InvoiceText = "Donation test",
     SmsConfirmation = true,
 };
-
-transaction.Properties["message_prefix"] = "Dear customer...";
-transaction.Properties["message_suffix"] = "Best regards...";
 
 await serviceClient.CreateStrexTransactionAsync(transaction);
 ```
@@ -589,6 +587,8 @@ var pincode = new Pincode
 await serviceClient.SendPinCodeAsync(pincode);
 ```
 
+PrefixText, SuffixText and PincodeLength are optional. If specified, PincodeLength must be between 4 and 6. MaxAttempts must be between 1 and 5.
+
 ### Verify pincode
 This example shows how to verify the pincode sent in the previous step and entered on a web page by the user. Use the TransactionId provided in the previous step.
 #### Request
@@ -603,7 +603,7 @@ Additionally, for long messages (greater than 160 GSM-7 or 70 UCS-2) we will spl
 
 Note that this may cause more message segments to be sent than you expect - a body with 152 GSM-7-compatible characters and a single unicode character will be split into three (3) messages because the unicode character changes the encoding into less-compact UCS-2. This will incur charges for three outgoing messages against your account.
 
-Norwegian operators support different numbers of segments; Ice 12 segments, Telia 20 segments and Telenor 255 segments.
+Norwegian operators support different numbers of segments; Ice 12 segments, Telia 16 segments and Telenor 255 segments.
 
 ### Automatic character replacements
 Unless you spesifically set the AllowUnicode property to true, we will automatically replace the following Unicode characters into GSM-7 counter-parts:
@@ -693,11 +693,38 @@ The new properties are ServiceId and preAuthorization. ServiceId must be added t
 The ServiceId is always the same for one keyword. Incoming messages forwarded with "preAuthorization" set as "false" are not possible
 to bill via Strex Payment.
 
-### Pre-authorization via API
-Pre-authorization via API can be used with either SMS confirmation or OTP (one-time-passord). SMS confirmation is used by default if OneTimePassword isn't used.
-PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page.
+### Pre-authorization via API with SMS
+Pre-authorization via API can be used with SMS confirmation.
+PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page. You can use message_prefix and message_suffix custom properties to influence the start and end of the SMS confirmation sent by Strex.
+Here's an example:
 
-Example using OTP-flow:
+```C#
+var transactionId = "your-unique-id";
+
+var transaction = new StrexTransaction
+{
+    TransactionId = transactionId,
+    ShortNumber = "2002",
+    Recipient = "+4798079008",
+    MerchantId = "your-merchant-id",
+    Age = 18,
+    Price = 10,
+    ServiceCode = ServiceCodes.NonCommercialDonation,
+    PreAuthServiceId = "your-service-id",
+    PreAuthServiceDescription = "your-subscription-description",
+    InvoiceText = "Donation test"
+};
+
+transaction.Properties["message_prefix"] = "Dear customer...";
+transaction.Properties["message_suffix"] = "Best regards...";
+
+await serviceClient.CreateStrexTransactionAsync(transaction);
+```
+
+### Pre-authorization via API with OTP
+Pre-authorization via API can be used with OTP (one-time-passord).
+PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page. Here's an example:
+
 ```C#
 var transactionId = "your-unique-id";
 
@@ -734,6 +761,8 @@ await serviceClient.CreateStrexTransactionAsync(transaction);
 ```
 
 ### Rebilling with pre-authorization:
+After you've established an end-user agreement you can then bill further for your service with regular POST strex transaction requests. Here's an example:
+
 ```C#
 var transaction = new StrexTransaction
 {
