@@ -14,6 +14,11 @@ namespace Target365.Sdk
 		public const string Text = "Text";
 
 		/// <summary>
+		/// Matching first word in text.
+		/// </summary>
+		public const string Exact = "Exact";
+
+		/// <summary>
 		/// Matching start of text.
 		/// </summary>
 		public const string Startswith = "Startswith";
