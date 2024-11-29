@@ -416,7 +416,7 @@ var keyword = new Keyword
 {
     ShortNumberId = "NO-2002",
     KeywordText = "HELLO",
-    Mode = KeywordModes.Text,
+    Mode = KeywordModes.Startswith,
     ForwardUrl = "https://your-site.net/api/receive-sms",
     Enabled = true
 };
