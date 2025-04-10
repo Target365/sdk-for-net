@@ -91,5 +91,11 @@ namespace Target365.Sdk
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]
 		public string ResultDescription { get; set; }
+
+		/// <summary>
+		/// Teletorg settings.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public Teletorg Teletorg { get; set; }
 	}
 }
