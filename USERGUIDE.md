@@ -40,10 +40,11 @@
 * [Encoding and SMS length](#encoding-and-sms-length)
     * [Automatic character replacements](#automatic-character-replacements)
 * [Pre-authorization](#pre-authorization)
-   * [Pre-authorization via keyword](#pre-authorization-via-keyword)
-   * [Pre-authorization via API with SMS](#pre-authorization-via-api-with-sms)
-   * [Pre-authorization via API with OTP](#pre-authorization-via-api-with-otp)
-   * [Rebilling with pre-authorization](#rebilling-with-pre-authorization)
+    * [Pre-authorization via keyword](#pre-authorization-via-keyword)
+    * [Pre-authorization via API with SMS](#pre-authorization-via-api-with-sms)
+    * [Pre-authorization via API with OTP](#pre-authorization-via-api-with-otp)
+    * [Rebilling with pre-authorization](#rebilling-with-pre-authorization)
+    * [Delete a pre-authorization](#delete-a-pre-authorization)]
 * [Testing](#testing)
     * [Fake numbers](#fake-numbers)
 
@@ -779,6 +780,13 @@ var transaction = new StrexTransaction
 };
 
 await serviceClient.CreateStrexTransactionAsync(transaction);
+```
+
+### Delete a pre-authorization
+This example deletes a pre-authorization. Use this when the end-user wants to stop further rebilling and you are handling the users at your end, and not within Strex Connect. This ensures that the user will get a new agreement if he wants to subscribe again in the future.
+
+```C#
+await serviceClient.DeletePreauthTokenAsync("your-merchant-id", "your-service-id", "+4798079008");
 ```
 
 ## Testing
