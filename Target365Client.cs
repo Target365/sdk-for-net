@@ -819,7 +819,7 @@ namespace Target365.Sdk
 			if (string.IsNullOrEmpty(serviceId)) throw new ArgumentException($"{nameof(serviceId)} cannot be null or empty string.");
 			if (string.IsNullOrEmpty(msisdn)) throw new ArgumentException($"{nameof(msisdn)} cannot be null or empty string.");
 
-			using var request = new HttpRequestMessage(HttpMethod.Delete, new Uri(_httpClient.BaseAddress, $"api/strex/token/{WebUtility.UrlEncode(msisdn)}?serviceId={WebUtility.UrlEncode(serviceId)}&msisdn={WebUtility.UrlEncode(msisdn)}"));
+			using var request = new HttpRequestMessage(HttpMethod.Delete, new Uri(_httpClient.BaseAddress, $"api/strex/token/{WebUtility.UrlEncode(merchantId)}?serviceId={WebUtility.UrlEncode(serviceId)}&msisdn={WebUtility.UrlEncode(msisdn)}"));
 			await SignRequest(request).ConfigureAwait(false);
 			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
