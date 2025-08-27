@@ -44,7 +44,7 @@
     * [Pre-authorization via API with SMS](#pre-authorization-via-api-with-sms)
     * [Pre-authorization via API with OTP](#pre-authorization-via-api-with-otp)
     * [Rebilling with pre-authorization](#rebilling-with-pre-authorization)
-    * [Delete a pre-authorization](#delete-a-pre-authorization)]
+    * [Delete a pre-authorization](#delete-a-pre-authorization)
 * [Testing](#testing)
     * [Fake numbers](#fake-numbers)
 
