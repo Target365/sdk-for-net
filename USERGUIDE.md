@@ -188,6 +188,7 @@ var transaction = new StrexTransaction
     Price = 1,
     ServiceCode = ServiceCodes.NonCommercialDonation,
     InvoiceText = "Donation test",
+    Content = "SMS_TEXT_TO_ENDUSER",
     SmsConfirmation = true,
 };
 
@@ -222,6 +223,7 @@ var transaction = new StrexTransaction
     Price = 1,
     ServiceCode = ServiceCodes.NonCommercialDonation,
     InvoiceText = "Donation test",
+    Content = "SMS_TEXT_TO_ENDUSER",
     OneTimePassword = "ONE_TIME_PASSWORD_FROM_USER"
 };
 
