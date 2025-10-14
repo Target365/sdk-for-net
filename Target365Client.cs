@@ -816,7 +816,6 @@ namespace Target365.Sdk
 		public async Task<string> GetPreauthTokenAsync(string merchantId, string serviceId, string msisdn, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(merchantId)) throw new ArgumentException($"{nameof(merchantId)} cannot be null or empty string.");
-			if (string.IsNullOrEmpty(serviceId)) throw new ArgumentException($"{nameof(serviceId)} cannot be null or empty string.");
 			if (string.IsNullOrEmpty(msisdn)) throw new ArgumentException($"{nameof(msisdn)} cannot be null or empty string.");
 
 			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/token/{WebUtility.UrlEncode(merchantId)}?serviceId={WebUtility.UrlEncode(serviceId)}&msisdn={WebUtility.UrlEncode(msisdn)}"));
@@ -842,7 +841,6 @@ namespace Target365.Sdk
 		public async Task DeletePreauthTokenAsync(string merchantId, string serviceId, string msisdn, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(merchantId)) throw new ArgumentException($"{nameof(merchantId)} cannot be null or empty string.");
-			if (string.IsNullOrEmpty(serviceId)) throw new ArgumentException($"{nameof(serviceId)} cannot be null or empty string.");
 			if (string.IsNullOrEmpty(msisdn)) throw new ArgumentException($"{nameof(msisdn)} cannot be null or empty string.");
 
 			using var request = new HttpRequestMessage(HttpMethod.Delete, new Uri(_httpClient.BaseAddress, $"api/strex/token/{WebUtility.UrlEncode(merchantId)}?serviceId={WebUtility.UrlEncode(serviceId)}&msisdn={WebUtility.UrlEncode(msisdn)}"));
