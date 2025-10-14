@@ -53,7 +53,7 @@ PM> Install-Package Target365.Sdk
 ```
 > dotnet add package Target365.Sdk
 ```
-[![NuGet](https://buildstats.info/nuget/target365.sdk)](https://www.nuget.org/packages/Target365.Sdk)
+[![NuGet](https://badge.fury.io/nu/Target365.Sdk.svg)](https://www.nuget.org/packages/Target365.Sdk)
 
 ### Test Environment
 Our test-environment acts as a sandbox that simulates the real API as closely as possible. This can be used to get familiar with the service before going to production. Please be ware that the simulation isn't perfect and must not be taken to have 100% fidelity.

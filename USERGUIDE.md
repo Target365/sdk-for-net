@@ -40,10 +40,11 @@
 * [Encoding and SMS length](#encoding-and-sms-length)
     * [Automatic character replacements](#automatic-character-replacements)
 * [Pre-authorization](#pre-authorization)
-   * [Pre-authorization via keyword](#pre-authorization-via-keyword)
-   * [Pre-authorization via API with SMS](#pre-authorization-via-api-with-sms)
-   * [Pre-authorization via API with OTP](#pre-authorization-via-api-with-otp)
-   * [Rebilling with pre-authorization](#rebilling-with-pre-authorization)
+    * [Pre-authorization via keyword](#pre-authorization-via-keyword)
+    * [Pre-authorization via API with SMS](#pre-authorization-via-api-with-sms)
+    * [Pre-authorization via API with OTP](#pre-authorization-via-api-with-otp)
+    * [Rebilling with pre-authorization](#rebilling-with-pre-authorization)
+    * [Delete a pre-authorization](#delete-a-pre-authorization)
 * [Testing](#testing)
     * [Fake numbers](#fake-numbers)
 
@@ -187,6 +188,7 @@ var transaction = new StrexTransaction
     Price = 1,
     ServiceCode = ServiceCodes.NonCommercialDonation,
     InvoiceText = "Donation test",
+    Content = "SMS_TEXT_TO_ENDUSER",
     SmsConfirmation = true,
 };
 
@@ -221,6 +223,7 @@ var transaction = new StrexTransaction
     Price = 1,
     ServiceCode = ServiceCodes.NonCommercialDonation,
     InvoiceText = "Donation test",
+    Content = "SMS_TEXT_TO_ENDUSER",
     OneTimePassword = "ONE_TIME_PASSWORD_FROM_USER"
 };
 
@@ -781,6 +784,13 @@ var transaction = new StrexTransaction
 await serviceClient.CreateStrexTransactionAsync(transaction);
 ```
 
+### Delete a pre-authorization
+This example deletes a pre-authorization. Use this when the end-user wants to stop further rebilling and you are handling the users at your end, and not within Strex Connect. This ensures that the user will get a new agreement if he wants to subscribe again in the future.
+
+```C#
+await serviceClient.DeletePreauthTokenAsync("your-merchant-id", "your-service-id", "+4798079008");
+```
+
 ## Testing
 
 ### Fake numbers
@@ -792,3 +802,4 @@ If you need to trigger sms messages with different status codes for testing, wit
 * +4700000020: Failed - SubscriberBarred
 
 All other numbers starting with +47000000 will be treated as fake and get status code Ok - Delivered.
+A custom property named "TestInProd" must always be set to true on the Properties field, otherwise testing fake numbers will not work. This is a security measure to allow testing with fake numbers in our production as well as test-environment.

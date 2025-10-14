@@ -10,13 +10,13 @@
   <PropertyGroup>
     <TargetFrameworks>net461;netstandard2.1</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.8.14</Version>
+    <Version>1.8.15</Version>
     <Authors>Target365</Authors>
     <Company>Target365</Company>
     <Product>Target365 SDK</Product>
     <Description>.NET Library for Target365 Online Services</Description>
     <Copyright></Copyright>
-    <PackageReleaseNotes>Added Teletorg parameters to OutMessage and StrexTransaction.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added keyword modes Startswith and Exact (Text is deprecated). Upgraded nuget package references.</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>Target365.Sdk.snk</AssemblyOriginatorKeyFile>
@@ -27,8 +27,8 @@
     <RepositoryUrl>https://github.com/Target365/sdk-for-net</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>target365_nuget_logo.png</PackageIcon>
-    <AssemblyVersion>1.8.14.0</AssemblyVersion>
-    <FileVersion>1.8.14.0</FileVersion>
+    <AssemblyVersion>1.8.15.0</AssemblyVersion>
+    <FileVersion>1.8.15.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -64,7 +64,6 @@
 
   <ItemGroup>
     <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net461'" />
-    <Reference Include="System.Web" />
   </ItemGroup>
   
   <ItemGroup>
