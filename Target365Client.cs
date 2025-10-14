@@ -807,6 +807,32 @@ namespace Target365.Sdk
 		}
 
 		/// <summary>
+		/// Gets a Strex preauthorization token.
+		/// </summary>
+		/// <param name="merchantId">Strex merchant id.</param>
+		/// <param name="serviceId">Service id.</param>
+		/// <param name="msisdn">Msisdn</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		public async Task<string> GetPreauthTokenAsync(string merchantId, string serviceId, string msisdn, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrEmpty(merchantId)) throw new ArgumentException($"{nameof(merchantId)} cannot be null or empty string.");
+			if (string.IsNullOrEmpty(serviceId)) throw new ArgumentException($"{nameof(serviceId)} cannot be null or empty string.");
+			if (string.IsNullOrEmpty(msisdn)) throw new ArgumentException($"{nameof(msisdn)} cannot be null or empty string.");
+
+			using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress, $"api/strex/token/{WebUtility.UrlEncode(merchantId)}?serviceId={WebUtility.UrlEncode(serviceId)}&msisdn={WebUtility.UrlEncode(msisdn)}"));
+			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				return null;
+
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+
+			return await response.Content.ReadAsStringAsync();
+		}
+
+		/// <summary>
 		/// Deletes a Strex preauthorization token.
 		/// </summary>
 		/// <param name="merchantId">Strex merchant id.</param>

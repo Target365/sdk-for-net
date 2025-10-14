@@ -44,6 +44,7 @@
     * [Pre-authorization via API with SMS](#pre-authorization-via-api-with-sms)
     * [Pre-authorization via API with OTP](#pre-authorization-via-api-with-otp)
     * [Rebilling with pre-authorization](#rebilling-with-pre-authorization)
+    * [Get a pre-authorization token](#get-a-pre-authorization-token)
     * [Delete a pre-authorization](#delete-a-pre-authorization)
 * [Testing](#testing)
     * [Fake numbers](#fake-numbers)
@@ -782,6 +783,13 @@ var transaction = new StrexTransaction
 };
 
 await serviceClient.CreateStrexTransactionAsync(transaction);
+```
+
+### Get a pre-authorization token
+This example gets a pre-authorization token.
+
+```C#
+await serviceClient.GetPreauthTokenAsync("your-merchant-id", "your-service-id", "+4798079008");
 ```
 
 ### Delete a pre-authorization

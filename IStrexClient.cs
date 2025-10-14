@@ -116,5 +116,23 @@ namespace Target365.Sdk
 		/// <param name="registrationSms">Strex registration sms.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		Task SendStrexRegistrationSmsAsync(StrexRegistrationSms registrationSms, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Get a preauthorization token.
+		/// </summary>
+		/// <param name="merchantId">MerchantId.</param>
+		/// <param name="serviceId">ServiceId.</param>
+		/// <param name="msisdn">Msisdn.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		Task<string> GetPreauthTokenAsync(string merchantId, string serviceId, string msisdn, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Deletes a preauthorization token.
+		/// </summary>
+		/// <param name="merchantId">MerchantId.</param>
+		/// <param name="serviceId">ServiceId.</param>
+		/// <param name="msisdn">Msisdn.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		Task DeletePreauthTokenAsync(string merchantId, string serviceId, string msisdn, CancellationToken cancellationToken = default);
 	}
 }
