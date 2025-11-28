@@ -46,7 +46,7 @@ MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEuVHnFqJxiBC9I5+8a8Sx66brBCz3
 Flt70WN9l7WZ8VQVN9DZt0kW5xpiO5aG7qd5K8OcHZeoJRprFJOkBwW4Fg==
 -----END PUBLIC KEY-----
 ```
-Paste the middle part to the "Public key-string" input field in Strex Connect.
+Paste the middle part in the "Public key-string" input field and select "ECDsaP256" as "Signing algorithm" in Strex Connect.
 
 For more details on using the SDK we strongly suggest you check out our [.NET User Guide](USERGUIDE.md).
 
