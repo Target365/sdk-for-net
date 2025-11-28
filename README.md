@@ -5,8 +5,12 @@ Strex AS is a Norwegian payment and SMS gateway (Strex Connect) provider. Strex 
 
 ### Getting started
 To get started, please click here: https://strex.no/strex-connect#Prispakker and register your organisation. 
-After registration you can activate the SDK by sending us an email at <sdk@strex.no> containing your EC public key in PEM-format.
-You can generate your EC public/private key-pair using openssl like this:
+
+After registration you can activate the SDK by logging in to Strex Connect and create a key here: https://www.strexconnect.no/admin/public-key
+Select ".NET" as your SDK. Copy and store the "Private key-string" safe and encrypted (we recommend EAS-encryption). We only store the public-key.
+Set the expiry date, and optionally add an e-mail address so we can warn you when the key is about to expire.
+
+If you want, you can generate your own EC public/private key-pair using openssl like this and add it to the "From OpenSSL" tab:
 ```
 openssl ecparam -name prime256v1 -genkey -noout -out private.pem
 ```
@@ -34,13 +38,14 @@ Use this openssl command to extract the public key:
 ```
 openssl ec -in private.key -pubout -out public.key
 ```
-You can then send us the `public.key` file. The file should look something like this:
+The file should look something like this:
 ```
 -----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEuVHnFqJxiBC9I5+8a8Sx66brBCz3
 Flt70WN9l7WZ8VQVN9DZt0kW5xpiO5aG7qd5K8OcHZeoJRprFJOkBwW4Fg==
 -----END PUBLIC KEY-----
 ```
+Paste the middle part to the "Public key-string" input field in Strex Connect.
 
 For more details on using the SDK we strongly suggest you check out our [.NET User Guide](USERGUIDE.md).
 
