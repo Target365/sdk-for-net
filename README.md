@@ -6,8 +6,8 @@ Strex AS is a Norwegian payment and SMS gateway (Strex Connect) provider. Strex 
 ### Getting started
 To get started, please click here: https://strex.no/strex-connect#Prispakker and register your organisation. 
 
-After registration you can activate the SDK by logging in to Strex Connect and creating a key here:
-https://www.strexconnect.no/admin/public-key
+After registration you can activate the SDK by logging in to Strex Connect and create a key here:  
+https://www.strexconnect.no/admin/public-key 
 Select ".NET" as your SDK. Copy and store the "Private key-string" safe and encrypted (we recommend EAS-encryption). We only store the public-key.
 Set the expiry date, and optionally add an e-mail address so we can warn you when the key is about to expire.
 
