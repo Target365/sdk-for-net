@@ -660,6 +660,7 @@ var keyword = new Keyword
     PreAuthSettings = new PreAuthSettings
     {
         Active = true,
+		Age = 18,
         InfoText = "Info message sent before preauth message",
         InfoSender = "2002",
         PrefixMessage = "Text inserted before preauth text",
