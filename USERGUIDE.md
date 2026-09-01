@@ -660,7 +660,7 @@ var keyword = new Keyword
     PreAuthSettings = new PreAuthSettings
     {
         Active = true,
-		Age = 18,
+		    Age = 18,
         InfoText = "Info message sent before preauth message",
         InfoSender = "2002",
         PrefixMessage = "Text inserted before preauth text",
@@ -687,21 +687,35 @@ Content-Type: application/json
   "recipient":"2002",
   "content": "HELLO",
   "properties": {
-    "ServiceId": "1234",
-    "preAuthorization": true
+    "preAuthorization": true,
+    "preAuthToken": "123456789123456789"
   }
 }
 ```
 If PreAuthorization was not successfully performed, "preAuthorization" will be "false".
 
-The new properties are ServiceId and preAuthorization. ServiceId must be added to the outmessage/transaction when doing rebilling in the "preAuthServiceId" field. 
-The ServiceId is always the same for one keyword. Incoming messages forwarded with "preAuthorization" set as "false" are not possible
-to bill via Strex Payment.
+The new properties are preAuthorization and preAuthToken. PreAuthToken must be added to the outmessage/transaction when doing rebilling in the "PreAuthToken" field. 
+Incoming messages forwarded with "preAuthorization" set as "false" are not possible to bill via Strex Payment.
 
 ### Pre-authorization via API with SMS
 Pre-authorization via API can be used with SMS confirmation.
-PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page. You can use message_prefix and message_suffix custom properties to influence the start and end of the SMS confirmation sent by Strex.
+PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page. You can use message_prefix and message_suffix custom properties to influence the start and end of the SMS confirmation sent by Strex.
 Here's an example:
+
+```C#
+var strexPreAuth = new StrexPreAuth
+{
+    Msisdn = "+4798079008",
+    ShortNumber = "2002",
+    MerchantId = "your-merchant-id",
+    ServiceDescription = "your-subscription-description",
+    PrefixMessage = "Dear customer...",
+    PostfixMessage = "Best Regards...",
+    Age = 18
+};
+
+var preAuthToken = await serviceClient.CreateStrexPreAuth(strexPreAuth);
+```
 
 ```C#
 var transactionId = "your-unique-id";
@@ -715,13 +729,9 @@ var transaction = new StrexTransaction
     Age = 18,
     Price = 10,
     ServiceCode = ServiceCodes.NonCommercialDonation,
-    PreAuthServiceId = "your-service-id",
-    PreAuthServiceDescription = "your-subscription-description",
-    InvoiceText = "Donation test"
+    InvoiceText = "Donation test",
+    PreAuthToken = preAuthToken
 };
-
-transaction.Properties["message_prefix"] = "Dear customer...";
-transaction.Properties["message_suffix"] = "Best regards...";
 
 await serviceClient.CreateStrexTransactionAsync(transaction);
 ```
@@ -756,7 +766,6 @@ var transaction = new StrexTransaction
     Age = 18,
     Price = 10,
     ServiceCode = ServiceCodes.NonCommercialDonation,
-    PreAuthServiceId = "your-service-id",
     PreAuthServiceDescription = "your-subscription-description",
     InvoiceText = "Donation test",
     OneTimePassword = "code_from_end_user"
@@ -764,6 +773,8 @@ var transaction = new StrexTransaction
 
 await serviceClient.CreateStrexTransactionAsync(transaction);
 ```
+
+For later recurring billings, you can retrieve the PreAuthToken from the transaction by calling GetStrexTransactionAsync(transactionId). See next section how to use it.
 
 ### Rebilling with pre-authorization:
 After you've established an end-user agreement you can then bill further for your service with regular POST strex transaction requests. Here's an example:
@@ -779,7 +790,7 @@ var transaction = new StrexTransaction
     Age = 18,
     Price = 10,
     ServiceCode = ServiceCodes.NonCommercialDonation,
-    PreAuthServiceId = "your-service-id",
+    PreAuthToken = preAuthToken,
     InvoiceText = "Donation test",
 };
 
@@ -787,7 +798,7 @@ await serviceClient.CreateStrexTransactionAsync(transaction);
 ```
 
 ### Get a pre-authorization token
-This example gets a pre-authorization token.
+This example gets a pre-authorization token. DEPRECATED. You should store the PreAuthTokens from the methods above on your side.
 
 ```C#
 await serviceClient.GetPreauthTokenAsync("your-merchant-id", "your-service-id", "+4798079008");

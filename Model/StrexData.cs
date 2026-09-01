@@ -75,6 +75,12 @@ namespace Target365.Sdk
 		public string PreAuthServiceDescription { get; set; }
 
 		/// <summary>
+		/// PreAuthorization token.
+		/// </summary>
+		[DataMember(EmitDefaultValue = false)]
+		public string PreAuthToken { get; set; }
+
+		/// <summary>
 		/// Read-only: Whether billing was performed. Null if status is unknown.
 		/// </summary>
 		[DataMember(EmitDefaultValue = false)]

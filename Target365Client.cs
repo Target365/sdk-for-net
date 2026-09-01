@@ -671,6 +671,30 @@ namespace Target365.Sdk
 		}
 
 		/// <summary>
+		/// Creates a new strex pre-authorization token used for recurring billings.
+		/// </summary>
+		/// <param name="strexPreAuth">Strex pre-authorization object.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		public async Task<string> CreateStrexPreAuth(StrexPreAuth strexPreAuth, CancellationToken cancellationToken = default)
+		{
+			if (strexPreAuth == null) throw new ArgumentException($"{nameof(strexPreAuth)} cannot be null.");
+
+			var content = new StringContent(Serialize(strexPreAuth), Encoding.UTF8, "application/json");
+			using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(_httpClient.BaseAddress, "api/strex/preauth"))
+			{
+				Content = content
+			};
+
+			await SignRequest(request).ConfigureAwait(false);
+			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+			if (!response.IsSuccessStatusCode)
+				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
+
+			return Deserialize<string>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+		}
+
+		/// <summary>
 		/// Creates a new strex transaction.
 		/// </summary>
 		/// <param name="transaction">Strex transaction object.</param>
