@@ -40,8 +40,7 @@ Target365 (<sdk@strex.no>)
 Please feel free to raise an issue against this repository if you have any questions or problems.
 
 ### Contributing
-New contributors to this project are welcome. If you are interested in contributing please
-send an email to sdk@strex.no.
+New contributors to this project are welcome. If you are interested in contributing please create a pull request and we will review it.
 
 ### License
 This library is released under the MIT license.
