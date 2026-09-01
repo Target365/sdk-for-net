@@ -738,7 +738,7 @@ await serviceClient.CreateStrexTransactionAsync(transaction);
 
 ### Pre-authorization via API with OTP
 Pre-authorization via API can be used with OTP (one-time-passord).
-PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page. Here's an example:
+PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page. Here's an example:
 
 ```C#
 var transactionId = "your-unique-id";
