@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -159,7 +158,7 @@ namespace Target365.Sdk
 
 		public static ECDsa GetEcdsaFromPrivateKey(byte[] privateKey)
 		{
-#if NET461
+#if NET462
 			if (IsPemPrivateKey(privateKey))
 				privateKey = PemPrivateKeyToCng(privateKey);
 
@@ -198,7 +197,7 @@ namespace Target365.Sdk
 
 		public static ECDsa GetEcdsaFromPemPrivateKey(byte[] pemPrivateKey)
 		{
-#if NET461
+#if NET462
 			var cngPrivateKey = GetCngBytesFromPemPrivateKeyBytes(pemPrivateKey);
 			return new ECDsaCng(CngKey.Import(cngPrivateKey, CngKeyBlobFormat.EccPrivateBlob));
 #else
@@ -218,7 +217,7 @@ namespace Target365.Sdk
 
 		public static ECDsa GetEcdsaFromPemPublicKey(byte[] pemBytes)
 		{
-#if NET461
+#if NET462
 			var rawBytes = GetRawKey(pemBytes);
 			var cngBytes = GetCngBytes(rawBytes, ECDsaP256);
 			return new ECDsaCng(CngKey.Import(cngBytes, CngKeyBlobFormat.GenericPublicBlob));

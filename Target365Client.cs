@@ -588,46 +588,7 @@ namespace Target365.Sdk
 		}
 
 		/// <summary>
-		/// Creates/updates a merchant.
-		/// </summary>
-		/// <param name="merchant">merchant object.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task SaveMerchantAsync(StrexMerchant merchant, CancellationToken cancellationToken = default)
-		{
-			if (merchant == null) throw new ArgumentNullException(nameof(merchant));
-			if (merchant.MerchantId == null) throw new ArgumentNullException(nameof(merchant.MerchantId));
-
-			var content = new StringContent(Serialize(merchant), Encoding.UTF8, "application/json");
-			using var request = new HttpRequestMessage(HttpMethod.Put, new Uri(_httpClient.BaseAddress, $"api/strex/merchants/{WebUtility.UrlEncode(merchant.MerchantId)}"))
-			{
-				Content = content
-			};
-
-			await SignRequest(request).ConfigureAwait(false);
-			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode)
-				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
-		}
-
-		/// <summary>
-		/// Deletes a merchant.
-		/// </summary>
-		/// <param name="merchantId">Merchant id.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		public async Task DeleteMerchantAsync(string merchantId, CancellationToken cancellationToken = default)
-		{
-			if (string.IsNullOrEmpty(merchantId)) throw new ArgumentException($"{nameof(merchantId)} cannot be null or empty string.");
-
-			using var request = new HttpRequestMessage(HttpMethod.Delete, new Uri(_httpClient.BaseAddress, $"api/strex/merchants/{WebUtility.UrlEncode(merchantId)}"));
-			await SignRequest(request).ConfigureAwait(false);
-			using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-
-			if (!response.IsSuccessStatusCode)
-				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
-		}
-
-		/// <summary>
-		/// Creates/updates a merchant.
+		/// Creates a one-time password for a later Strex transaction.
 		/// </summary>
 		/// <param name="oneTimePassword">One-time password object.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>

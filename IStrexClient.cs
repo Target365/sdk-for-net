@@ -22,20 +22,6 @@ namespace Target365.Sdk
 		Task<StrexMerchant> GetMerchantAsync(string merchantId, CancellationToken cancellationToken = default);
 
 		/// <summary>
-		/// Creates/updates a merchant.
-		/// </summary>
-		/// <param name="merchant">merchant object.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		Task SaveMerchantAsync(StrexMerchant merchant, CancellationToken cancellationToken = default);
-
-		/// <summary>
-		/// Deletes a merchant.
-		/// </summary>
-		/// <param name="merchantId">merchant id.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		Task DeleteMerchantAsync(string merchantId, CancellationToken cancellationToken = default);
-
-		/// <summary>
 		/// Creates a new one-time password.
 		/// </summary>
 		/// <param name="oneTimePassword">One-time password object.</param>
@@ -134,5 +120,12 @@ namespace Target365.Sdk
 		/// <param name="msisdn">Msisdn.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		Task DeletePreauthTokenAsync(string merchantId, string serviceId, string msisdn, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Creates a new strex pre-authorization token used for recurring billings.
+		/// </summary>
+		/// <param name="strexPreAuth">Strex pre-authorization object.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		Task<string> CreateStrexPreAuth(StrexPreAuth strexPreAuth, CancellationToken cancellationToken = default);
 	}
 }

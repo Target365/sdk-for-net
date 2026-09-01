@@ -19,11 +19,5 @@ namespace Target365.Sdk
 		/// </summary>
 		[DataMember]
 		public string ShortNumberId { get; set; }
-
-		/// <summary>
-		/// This is a write-only property and will always return null.
-		/// </summary>
-		[DataMember]
-		public string Password { get; set; }
 	}
 }
