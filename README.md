@@ -47,12 +47,14 @@ send an email to sdk@strex.no.
 This library is released under the MIT license.
 
 ### About Target365
-![Target365](https://github.com/Target365/sdk-for-php/raw/master/target365.png "Target365 AS")
+![Target365](https://github.com/Target365/sdk-for-net/raw/master/target365.png "Target365 AS")
+
 Target365 is a Norwegian CPaaS provider that delivers mobile communication via A2P SMS, RCS and integrated payment solutions at scale.
 
 ### About Strex
+![Strex](https://github.com/Target365/sdk-for-net/raw/master/strex.png "Strex AS")
+
 Strex AS is a Norwegian payment and SMS gateway provider. Strex withholds an e-money license and processes more than 70 million transactions every year. Strex has more than 4.2 mill customers in Norway and are owned by the Norwegian mobile network operators (Telenor, Telia and Ice). Strex Connect is based on the Target365 marketing and communication platform.
-![Strex](https://github.com/Target365/sdk-for-php/raw/master/strex.png "Strex AS")
 
 ### About Strex Connect
 Strex Connect is based on the Target365 CPaaS platform and provides a comprehensive suite of payment and communication services.
