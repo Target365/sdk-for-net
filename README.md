@@ -1,5 +1,3 @@
-## ![Strex](https://github.com/Target365/sdk-for-php/raw/master/strex.png "Strex")
-Strex AS is a Norwegian payment and SMS gateway (Strex Connect) provider. Strex withholds an e-money license and processes more than 70 million transactions every year. Strex has more than 4.2 mill customers in Norway and are owned by the Norwegian mobile network operators (Telenor, Telia and Ice). Strex Connect is based on the Target365 marketing and communication platform.
 ## Target365 SDK for .NET
 [![License](https://img.shields.io/github/license/Target365/sdk-for-node.svg?style=flat)](https://opensource.org/licenses/MIT)
 
@@ -11,43 +9,7 @@ https://www.strexconnect.no/admin/public-key
 Select ".NET" as your SDK. Copy and store the "Private key-string" safe and encrypted (we recommend EAS-encryption). We only store the public-key.
 Set the expiry date, and optionally add an e-mail address so we can warn you when the key is about to expire.
 
-If you want, you can generate your own EC public/private key-pair using openssl like this and add it to the "From OpenSSL" tab:
-```
-openssl ecparam -name prime256v1 -genkey -noout -out private.pem
-```
-Use openssl to convert it to pk8 format which the .NET SDK uses.
-```
-openssl pkcs8 -topk8 -inform pem -in private.pem -outform pem -nocrypt -out private.key
-```
-The file `private.key` should look something like this:
-```
------BEGIN PRIVATE KEY-----
-MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgzNTTnuXqcrI5uSEa
-V6REzZG7hU+TzRl0Phe56k9/gPWhRANCAAQwB42Sozmtci4mDjnegx003FBV+9PQ
-eYBRvK7GScuDQo2+DjEn4hUsnKDZw9o4y+xRat+ItUGKcvVCMW8Swod5
------END PRIVATE KEY-----
-```
-
-Here's how the private key should be constructed in C#:
-```C#
-var privateKey = "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgzNTTnuXqcrI5uSEa"
-    + "V6REzZG7hU+TzRl0Phe56k9/gPWhRANCAAQwB42Sozmtci4mDjnegx003FBV+9PQ"
-    + "eYBRvK7GScuDQo2+DjEn4hUsnKDZw9o4y+xRat+ItUGKcvVCMW8Swod5";
-```
-
-Use this openssl command to extract the public key:
-```
-openssl ec -in private.key -pubout -out public.key
-```
-The file should look something like this:
-```
------BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEuVHnFqJxiBC9I5+8a8Sx66brBCz3
-Flt70WN9l7WZ8VQVN9DZt0kW5xpiO5aG7qd5K8OcHZeoJRprFJOkBwW4Fg==
------END PUBLIC KEY-----
-```
-Paste the middle part in the "Public key-string" input field and select "ECDsaP256" as "Signing algorithm" in Strex Connect.
-
+You can also generate your own public/private key pair using openssl and import this into Strex Connect.
 For more details on using the SDK we strongly suggest you check out our [.NET User Guide](USERGUIDE.md).
 
 ### NuGet
@@ -83,3 +45,14 @@ send an email to sdk@strex.no.
 
 ### License
 This library is released under the MIT license.
+
+### About Target365
+![Target365](https://github.com/Target365/sdk-for-php/raw/master/target365.png "Target365 AS")
+Target365 is a Norwegian CPaaS provider that delivers mobile communication via A2P SMS, RCS and integrated payment solutions at scale.
+
+### About Strex
+Strex AS is a Norwegian payment and SMS gateway provider. Strex withholds an e-money license and processes more than 70 million transactions every year. Strex has more than 4.2 mill customers in Norway and are owned by the Norwegian mobile network operators (Telenor, Telia and Ice). Strex Connect is based on the Target365 marketing and communication platform.
+![Strex](https://github.com/Target365/sdk-for-php/raw/master/strex.png "Strex AS")
+
+### About Strex Connect
+Strex Connect is based on the Target365 CPaaS platform and provides a comprehensive suite of payment and communication services.
