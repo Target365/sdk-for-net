@@ -10,7 +10,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -477,7 +476,7 @@ namespace Target365.Sdk
 			if (!response.IsSuccessStatusCode)
 				await ThrowExceptionFromResponseAsync(request, response).ConfigureAwait(false);
 
-			return await response.Content.ReadAsStreamAsync();
+			return new StreamWithInnerDisposable(await response.Content.ReadAsStreamAsync(), response);
 		}
 
 		/// <summary>
