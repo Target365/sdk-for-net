@@ -642,8 +642,7 @@ Unless you spesifically set the AllowUnicode property to true, we will automatic
 *Please note that we might remove or add Unicode characters that are automatically replaced. This is an "best effort" to save on SMS costs!*
 
 ## Pre-authorization
-Some Strex service codes require recurring billing to be authorized by the user via a confirmation sms or sms pincode.
-This can be achieved either via direct API calls or setting it up to be handled automatically via a keyword.
+Recurring billing requires that end user has authorized it via a confirmation sms or sms pincode. This can be achieved via direct API calls. It can also be handled automatically via a keyword if you have permission for it.
 
 ### Pre-authorization via keyword
 Automatic pre-authorization can be activated on a keyword by either activating it in the
@@ -694,8 +693,8 @@ Content-Type: application/json
 ```
 If PreAuthorization was not successfully performed, "preAuthorization" will be "false".
 
-The new properties are preAuthorization and preAuthToken. PreAuthToken must be added to the outmessage/transaction when doing rebilling in the "PreAuthToken" field. 
-Incoming messages forwarded with "preAuthorization" set as "false" are not possible to bill via Strex Payment.
+PreAuthToken must be added to the outmessage/transaction when doing rebilling in the "PreAuthToken" field. 
+Incoming messages forwarded with "preAuthorization" set as "false" should not activate a recurring billing process via Strex Payment since payment will fail.
 
 ### Pre-authorization via API with SMS
 Pre-authorization via API can be used with SMS confirmation.
