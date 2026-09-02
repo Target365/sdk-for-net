@@ -645,8 +645,7 @@ Unless you spesifically set the AllowUnicode property to true, we will automatic
 Recurring billing requires that end user has authorized it via a confirmation sms or sms pincode. This can be achieved via direct API calls. It can also be handled automatically via a keyword if you have permission for it.
 
 ### Pre-authorization via keyword
-Automatic pre-authorization can be activated on a keyword by either activating it in the
-PreAuth section of the keyword in Strex Connect or via the SDK
+Automatic pre-authorization can be activated on a keyword by either activating it in the PreAuth section of the keyword in Strex Connect or via the SDK.
 
 ```C#
 var keyword = new Keyword
@@ -659,7 +658,7 @@ var keyword = new Keyword
     PreAuthSettings = new PreAuthSettings
     {
         Active = true,
-		    Age = 18,
+		Age = 18,
         InfoText = "Info message sent before preauth message",
         InfoSender = "2002",
         PrefixMessage = "Text inserted before preauth text",
